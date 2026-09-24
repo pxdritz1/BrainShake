@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
+  connectorEndpoints,
   hitTestObject,
+  hitTestSegment,
   normalizeBoardShapes,
   normalizeShape,
   resizeShapeFrame,
@@ -104,5 +106,24 @@ describe('hitTestObject', () => {
     const note = { id: 'note', type: 'text', x: 20, y: 30, w: 100, h: 80 }
     expect(hitTestObject(note, { x: 125, y: 50 }, 6)).toBe(true)
     expect(hitTestObject(note, { x: 127, y: 50 }, 6)).toBe(false)
+  })
+})
+
+describe('hitTestSegment', () => {
+  it('finds points on or close to connector lines', () => {
+    expect(hitTestSegment({ x: 50, y: 50 }, { x: 0, y: 0 }, { x: 100, y: 100 })).toBe(true)
+    expect(hitTestSegment({ x: 50, y: 55 }, { x: 0, y: 0 }, { x: 100, y: 100 }, 8)).toBe(true)
+    expect(hitTestSegment({ x: 50, y: 62 }, { x: 0, y: 0 }, { x: 100, y: 100 }, 8)).toBe(false)
+  })
+})
+
+describe('connectorEndpoints', () => {
+  it('places each end at the connected object edge', () => {
+    const from = { id: 'a', type: 'text', x: 0, y: 0, w: 100, h: 80 }
+    const to = { id: 'b', type: 'text', x: 200, y: 0, w: 100, h: 80 }
+    expect(connectorEndpoints(from, to)).toEqual({
+      start: { x: 100, y: 40 },
+      end: { x: 200, y: 40 }
+    })
   })
 })

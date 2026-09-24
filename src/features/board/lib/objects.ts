@@ -34,25 +34,42 @@ export function hitTestObject(item: CanvasItem, point: Point, tolerance = 0): bo
   }
 
   const radius = tolerance + (item.strokeWidth || 4) / 2
-  const radiusSquared = radius * radius
   const points = item.points.map((sample) => ({ x: item.x + sample.x, y: item.y + sample.y }))
-  if (points.length === 1)
-    return (points[0].x - point.x) ** 2 + (points[0].y - point.y) ** 2 <= radiusSquared
-  return points.slice(1).some((end, index) => {
-    const start = points[index]
-    const dx = end.x - start.x
-    const dy = end.y - start.y
-    const lengthSquared = dx * dx + dy * dy
-    const projection = lengthSquared
-      ? Math.max(
-          0,
-          Math.min(1, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared)
-        )
-      : 0
-    const nearestX = start.x + projection * dx
-    const nearestY = start.y + projection * dy
-    return (point.x - nearestX) ** 2 + (point.y - nearestY) ** 2 <= radiusSquared
-  })
+  if (points.length === 1) return hitTestSegment(point, points[0], points[0], radius)
+  return points.slice(1).some((end, index) => hitTestSegment(point, points[index], end, radius))
+}
+
+export function hitTestSegment(point: Point, start: Point, end: Point, tolerance = 0): boolean {
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const lengthSquared = dx * dx + dy * dy
+  const projection = lengthSquared
+    ? Math.max(
+        0,
+        Math.min(1, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared)
+      )
+    : 0
+  const nearestX = start.x + projection * dx
+  const nearestY = start.y + projection * dy
+  return (point.x - nearestX) ** 2 + (point.y - nearestY) ** 2 <= tolerance * tolerance
+}
+
+export function connectorEndpoints(from: CanvasItem, to: CanvasItem) {
+  const center = (item: CanvasItem) => ({ x: item.x + item.w / 2, y: item.y + item.h / 2 })
+  const edge = (item: CanvasItem, target: CanvasItem) => {
+    const source = center(item)
+    const destination = center(target)
+    const dx = destination.x - source.x
+    const dy = destination.y - source.y
+    if (!dx && !dy) return source
+    if (Math.abs(dx) * item.h > Math.abs(dy) * item.w) {
+      const x = source.x + (Math.sign(dx) * item.w) / 2
+      return { x, y: source.y + (dy / dx) * (x - source.x) }
+    }
+    const y = source.y + (Math.sign(dy) * item.h) / 2
+    return { x: source.x + (dx / dy) * (y - source.y), y }
+  }
+  return { start: edge(from, to), end: edge(to, from) }
 }
 
 export function resizeShapeFrame(

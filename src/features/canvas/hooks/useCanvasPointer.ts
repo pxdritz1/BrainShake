@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from 'react'
 import { makeId } from '@/lib/id'
 import {
   addObjects,
+  connectorEndpoints,
   finishStroke,
+  hitTestSegment,
   hitTestObject,
   moveObjects,
   patchObject,
@@ -260,32 +262,50 @@ export function useCanvasPointer({
   }
 
   function eraseAt(point: Point) {
+    const tolerance = 9 / viewport.zoom
     const item = [...board.objects].reverse().find((candidate) => {
       return (
         isCanvasItem(candidate) &&
         !candidate.locked &&
         !erasedDuringGesture.current.has(candidate.id) &&
-        hitTestObject(candidate, point, 9 / viewport.zoom)
+        hitTestObject(candidate, point, tolerance)
       )
     })
-    if (!item || !isCanvasItem(item)) return
-    erasedDuringGesture.current.add(item.id)
+    const connector = item
+      ? undefined
+      : [...board.objects].reverse().find((candidate) => {
+          if (!isConnectorItem(candidate) || erasedDuringGesture.current.has(candidate.id))
+            return false
+          const from = board.objects.find(
+            (object): object is CanvasItem => isCanvasItem(object) && object.id === candidate.from
+          )
+          const to = board.objects.find(
+            (object): object is CanvasItem => isCanvasItem(object) && object.id === candidate.to
+          )
+          if (!from || !to) return false
+          const { start, end } = connectorEndpoints(from, to)
+          return hitTestSegment(point, start, end, tolerance)
+        })
+    const target = item || connector
+    if (!target) return
+    erasedDuringGesture.current.add(target.id)
     commit(
       (current) => ({
         ...current,
         objects: current.objects.filter(
           (candidate) =>
-            candidate.id !== item.id &&
+            candidate.id !== target.id &&
             !(
+              isCanvasItem(target) &&
               isConnectorItem(candidate) &&
-              (candidate.from === item.id || candidate.to === item.id)
+              (candidate.from === target.id || candidate.to === target.id)
             )
         )
       }),
       !eraserHistoryStarted.current
     )
     eraserHistoryStarted.current = true
-    setSelected((current) => current.filter((id) => id !== item.id))
+    setSelected((current) => current.filter((id) => id !== target.id))
   }
 
   function beginErase(event: React.PointerEvent<HTMLDivElement>) {
