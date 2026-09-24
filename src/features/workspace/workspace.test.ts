@@ -302,6 +302,24 @@ describe('workspace operation gate', () => {
 })
 
 describe('local snapshots', () => {
+  it('normalizes legacy shape proportions when saving and restoring snapshots', async () => {
+    const legacyShapeSnapshot: WorkspaceSnapshot = {
+      ...snapshot,
+      id: 'legacy-shape-snapshot',
+      activeBoardId: 'legacy-shape-board',
+      boards: [
+        {
+          id: 'legacy-shape-board',
+          name: 'Legacy shape',
+          objects: [{ id: 'stretched', type: 'shape', x: 10, y: 20, w: 250, h: 180 }]
+        }
+      ]
+    }
+    await saveSnapshot(legacyShapeSnapshot)
+    const restored = await loadSnapshot(legacyShapeSnapshot.id)
+    expect(restored.boards[0].objects[0]).toMatchObject({ x: 45, y: 20, w: 180, h: 180 })
+  })
+
   it('persists named versions and restores their shared media', async () => {
     await replaceSnapshots([])
     await saveSnapshot(snapshot)

@@ -3,6 +3,7 @@ import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import { useState } from 'react'
 import {
   BoxSelect,
+  Eraser,
   Hand,
   Link2,
   Pencil,
@@ -23,6 +24,7 @@ const TOOLS = [
   { id: 'text', icon: Type, label: 'Text (T)' },
   { id: 'sticky', icon: StickyNote, label: 'Sticky note (N)' },
   { id: 'pen', icon: Pencil, label: 'Pen (P)' },
+  { id: 'eraser', icon: Eraser, label: 'Eraser (E)' },
   { id: 'connector', icon: Link2, label: 'Link elements (L)' }
 ]
 

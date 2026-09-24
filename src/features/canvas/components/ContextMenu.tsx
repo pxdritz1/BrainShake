@@ -1,5 +1,5 @@
 import { ContextMenuContent, ContextMenuItem } from '@/components/ui/context-menu'
-import { ArrowUpToLine, Camera, Copy, Link2, Scissors, Trash2, Unlink } from 'lucide-react'
+import { ArrowUpToLine, Camera, Copy, Link2, Trash2, Unlink } from 'lucide-react'
 
 export function ContextMenu({
   onDuplicate,
@@ -9,7 +9,6 @@ export function ContextMenu({
   onLink,
   onUnlink,
   canUnlink,
-  onCut,
   onScreenshot,
   canEdit
 }: {
@@ -20,7 +19,6 @@ export function ContextMenu({
   onLink: () => void
   onUnlink: () => void
   canUnlink: boolean
-  onCut: () => void
   onScreenshot: () => void | Promise<void>
   canEdit: boolean
 }) {
@@ -40,9 +38,6 @@ export function ContextMenu({
       </ContextMenuItem>
       <ContextMenuItem disabled={!canUnlink} onSelect={onUnlink}>
         <Unlink size={14} /> Unlink elements
-      </ContextMenuItem>
-      <ContextMenuItem disabled={!canEdit} onSelect={onCut}>
-        <Scissors size={14} /> Cut
       </ContextMenuItem>
       <ContextMenuItem disabled={!canEdit} variant="destructive" onSelect={onDelete}>
         <Trash2 size={14} /> Delete

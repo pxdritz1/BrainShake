@@ -94,7 +94,7 @@ const STAR_SLACK = 0.1
 
 // Stricter options for snapping strokes nobody asked to snap (auto-correct), so
 // handwriting (an "o", an "l") and loose doodles stay as drawn.
-export const UNATTENDED = { minSize: 40, minConfidence: 0.1 }
+export const UNATTENDED = { minSize: 40, minConfidence: 0.18 }
 
 // `minSize` and `minConfidence` let callers be stricter than the defaults, e.g.
 // when snapping strokes nobody asked to snap.

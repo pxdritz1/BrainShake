@@ -28,7 +28,7 @@ export function usePreferences() {
   const [sidebarColor, setSidebarColor] = useLocalStorage(STORAGE_KEYS.sidebarColor, '')
   const [canvasColor, setCanvasColor] = useLocalStorage(STORAGE_KEYS.canvasColor, '')
   const [panelColor, setPanelColor] = useLocalStorage(STORAGE_KEYS.panelColor, '')
-  const [autoSnapShapes, setAutoSnapShapes] = useLocalStorage(STORAGE_KEYS.autoSnapShapes, true)
+  const [autoSnapShapes, setAutoSnapShapes] = useLocalStorage(STORAGE_KEYS.autoSnapShapes, false)
   const [grid, setGrid] = useState(true)
   return {
     theme,

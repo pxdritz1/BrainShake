@@ -1,6 +1,125 @@
 import { makeId } from '@/lib/id'
 import type { Board, BoardItem, BoardPatch, CanvasItem, Point } from '../types'
 
+export function normalizeShape(item: BoardItem): BoardItem {
+  if (item.type !== 'shape' || !('x' in item) || !('y' in item)) return item
+  if (!Number.isFinite(item.w) || !Number.isFinite(item.h) || item.w <= 0 || item.h <= 0)
+    return item
+
+  const size = Math.min(item.w, item.h)
+  if (item.w === size && item.h === size) return item
+  const centerX = item.x + item.w / 2
+  const centerY = item.y + item.h / 2
+  return { ...item, x: centerX - size / 2, y: centerY - size / 2, w: size, h: size }
+}
+
+export function normalizeBoardShapes(board: Board): Board {
+  let changed = false
+  const objects = board.objects.map((item) => {
+    const normalized = normalizeShape(item)
+    if (normalized !== item) changed = true
+    return normalized
+  })
+  return changed ? { ...board, objects } : board
+}
+
+export function hitTestObject(item: CanvasItem, point: Point, tolerance = 0): boolean {
+  if (item.type !== 'stroke' || !item.points?.length) {
+    return (
+      point.x >= item.x - tolerance &&
+      point.x <= item.x + item.w + tolerance &&
+      point.y >= item.y - tolerance &&
+      point.y <= item.y + item.h + tolerance
+    )
+  }
+
+  const radius = tolerance + (item.strokeWidth || 4) / 2
+  const points = item.points.map((sample) => ({ x: item.x + sample.x, y: item.y + sample.y }))
+  if (points.length === 1) return hitTestSegment(point, points[0], points[0], radius)
+  return points.slice(1).some((end, index) => hitTestSegment(point, points[index], end, radius))
+}
+
+export function hitTestSegment(point: Point, start: Point, end: Point, tolerance = 0): boolean {
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const lengthSquared = dx * dx + dy * dy
+  const projection = lengthSquared
+    ? Math.max(
+        0,
+        Math.min(1, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared)
+      )
+    : 0
+  const nearestX = start.x + projection * dx
+  const nearestY = start.y + projection * dy
+  return (point.x - nearestX) ** 2 + (point.y - nearestY) ** 2 <= tolerance * tolerance
+}
+
+export function connectorEndpoints(from: CanvasItem, to: CanvasItem) {
+  const center = (item: CanvasItem) => ({ x: item.x + item.w / 2, y: item.y + item.h / 2 })
+  const edge = (item: CanvasItem, target: CanvasItem) => {
+    const source = center(item)
+    const destination = center(target)
+    const dx = destination.x - source.x
+    const dy = destination.y - source.y
+    if (!dx && !dy) return source
+    if (Math.abs(dx) * item.h > Math.abs(dy) * item.w) {
+      const x = source.x + (Math.sign(dx) * item.w) / 2
+      return { x, y: source.y + (dy / dx) * (x - source.x) }
+    }
+    const y = source.y + (Math.sign(dy) * item.h) / 2
+    return { x: source.x + (dx / dy) * (y - source.y), y }
+  }
+  return { start: edge(from, to), end: edge(to, from) }
+}
+
+export function resizeShapeFrame(
+  frame: { x: number; y: number; w: number; h: number },
+  direction: string,
+  dx: number,
+  dy: number,
+  keepAspect: boolean,
+  minWidth = 100,
+  minHeight = 80
+) {
+  const west = direction.includes('w')
+  const east = direction.includes('e')
+  const north = direction.includes('n')
+  const south = direction.includes('s')
+  const horizontal = west || east
+  const vertical = north || south
+  const requestedWidth = Math.max(minWidth, frame.w + (west ? -dx : east ? dx : 0))
+  const requestedHeight = Math.max(minHeight, frame.h + (north ? -dy : south ? dy : 0))
+  let w = requestedWidth
+  let h = requestedHeight
+
+  if (keepAspect) {
+    const widthScale = requestedWidth / frame.w
+    const heightScale = requestedHeight / frame.h
+    const scale = Math.max(
+      minWidth / frame.w,
+      minHeight / frame.h,
+      horizontal && vertical
+        ? Math.abs(widthScale - 1) >= Math.abs(heightScale - 1)
+          ? widthScale
+          : heightScale
+        : horizontal
+          ? widthScale
+          : heightScale
+    )
+    w = frame.w * scale
+    h = frame.h * scale
+  }
+
+  const widthChange = w - frame.w
+  const heightChange = h - frame.h
+  return {
+    x: west ? frame.x - widthChange : east ? frame.x : frame.x - widthChange / 2,
+    y: north ? frame.y - heightChange : south ? frame.y : frame.y - heightChange / 2,
+    w,
+    h
+  }
+}
+
 // `data` must include the size (w/h); see defaultSize in the canvas object registry.
 export function createObject(
   type: string,
@@ -116,7 +235,7 @@ export function getStrokeGroups(strokes: CanvasItem[], gap = 18) {
 }
 
 export function addObjects(board: Board, items: BoardItem[]): Board {
-  return { ...board, objects: [...board.objects, ...items] }
+  return { ...board, objects: [...board.objects, ...items.map(normalizeShape)] }
 }
 
 export function patchObject(board: Board, id: string, patch: BoardPatch): Board {

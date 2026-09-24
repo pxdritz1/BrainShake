@@ -2712,6 +2712,9 @@ kbd {
     box-shadow 180ms ease,
     outline-color 180ms ease;
 }
+.app .canvas-object:hover .object-card {
+  box-shadow: 0 9px 22px rgba(29, 29, 31, 0.13);
+}
 .app .canvas-object.selected .object-card {
   animation: selection-enter 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }

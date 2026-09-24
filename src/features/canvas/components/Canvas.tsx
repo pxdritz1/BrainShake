@@ -80,13 +80,17 @@ export function Canvas({
       <ContextMenuTrigger asChild>
         <div
           ref={canvasRef}
-          className={`canvas-shell ${grid ? '' : 'grid-off'} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
+          className={`canvas-shell ${grid ? '' : 'grid-off'} ${editor.tool === 'eraser' ? 'tool-eraser' : ''} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
           onWheel={presenting ? undefined : onWheel}
           onPointerDownCapture={
             presenting
               ? undefined
               : (event) => {
                   pointer.onTouchPointerDown(event)
+                  if (event.defaultPrevented || editor.tool !== 'eraser') return
+                  event.preventDefault()
+                  event.stopPropagation()
+                  pointer.beginErase(event)
                   if (event.button === 1) pointer.beginPan(event)
                 }
           }
@@ -200,7 +204,6 @@ export function Canvas({
           onLink={() => editor.setTool('connector')}
           onUnlink={editor.unlinkSelection}
           canUnlink={selected.length >= 2}
-          onCut={editor.cutSelection}
           onScreenshot={onScreenshot}
           canEdit={selected.length > 0}
         />

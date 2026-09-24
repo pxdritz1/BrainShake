@@ -3,10 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { makeId } from '@/lib/id'
 import {
   addObjects,
+  connectorEndpoints,
   finishStroke,
+  hitTestSegment,
+  hitTestObject,
   moveObjects,
   patchObject,
   removeObjects,
+  resizeShapeFrame,
   resizeStroke
 } from '@/features/board/lib/objects'
 import type { CanvasItem, Point } from '@/features/board/types'
@@ -49,8 +53,10 @@ type Dragging =
       direction: string
       points?: Point[]
       fontSize?: number
+      aspectRatio?: number
     }
   | { type: 'pinch' }
+  | { type: 'erase'; pointerId: number }
   | { type: 'pan'; pointerId: number; start: Point; origin: Point }
 
 export type Drawing = CanvasItem & {
@@ -81,6 +87,8 @@ export function useCanvasPointer({
   const [drawing, setDrawing] = useState<Drawing | null>(null)
   const spacePressed = useRef(false)
   const hold = useRef<{ timer: number; anchor: Point } | null>(null)
+  const erasedDuringGesture = useRef(new Set<string>())
+  const eraserHistoryStarted = useRef(false)
   const touchPoints = useRef(new Map<number, Point>())
   const pinch = useRef<{
     distance: number
@@ -133,7 +141,11 @@ export function useCanvasPointer({
             y: current.y + point.y
           }))
           const gesture = recognizeGesture(points, board.objects)
-          return { ...current, gesture, snapped: gesture ? null : recognize(current.points) }
+          return {
+            ...current,
+            gesture,
+            snapped: gesture || !autoSnap ? null : recognize(current.points, UNATTENDED)
+          }
         })
       }, HOLD_DELAY)
     }
@@ -222,7 +234,8 @@ export function useCanvasPointer({
       h: item.h,
       direction,
       points: item.type === 'stroke' ? item.points : undefined,
-      fontSize: item.type === 'text' ? item.fontSize || 18 : undefined
+      fontSize: item.type === 'text' ? item.fontSize || 18 : undefined,
+      aspectRatio: item.type === 'shape' ? item.w / item.h : undefined
     })
   }
 
@@ -246,6 +259,68 @@ export function useCanvasPointer({
       start: { x: event.clientX, y: event.clientY },
       origin: pan
     })
+  }
+
+  function eraseAt(point: Point) {
+    const tolerance = 9 / viewport.zoom
+    const item = [...board.objects].reverse().find((candidate) => {
+      return (
+        isCanvasItem(candidate) &&
+        !candidate.locked &&
+        !erasedDuringGesture.current.has(candidate.id) &&
+        hitTestObject(candidate, point, tolerance)
+      )
+    })
+    const connector = item
+      ? undefined
+      : [...board.objects].reverse().find((candidate) => {
+          if (!isConnectorItem(candidate) || erasedDuringGesture.current.has(candidate.id))
+            return false
+          const from = board.objects.find(
+            (object): object is CanvasItem => isCanvasItem(object) && object.id === candidate.from
+          )
+          const to = board.objects.find(
+            (object): object is CanvasItem => isCanvasItem(object) && object.id === candidate.to
+          )
+          if (!from || !to) return false
+          const { start, end } = connectorEndpoints(from, to)
+          return hitTestSegment(point, start, end, tolerance)
+        })
+    const target = item || connector
+    if (!target) return
+    erasedDuringGesture.current.add(target.id)
+    commit(
+      (current) => ({
+        ...current,
+        objects: current.objects.filter(
+          (candidate) =>
+            candidate.id !== target.id &&
+            !(
+              isCanvasItem(target) &&
+              isConnectorItem(candidate) &&
+              (candidate.from === target.id || candidate.to === target.id)
+            )
+        )
+      }),
+      !eraserHistoryStarted.current
+    )
+    eraserHistoryStarted.current = true
+    setSelected((current) => current.filter((id) => id !== target.id))
+  }
+
+  function beginErase(event: React.PointerEvent<HTMLDivElement>) {
+    if (tool !== 'eraser') return
+    if (isSpacePan(event)) {
+      beginPan(event)
+      return
+    }
+    if (event.button !== 0) return
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+    erasedDuringGesture.current = new Set()
+    eraserHistoryStarted.current = false
+    setSelected([])
+    setDragging({ type: 'erase', pointerId: event.pointerId })
+    eraseAt(screenPoint(event))
   }
 
   function startPinch() {
@@ -373,6 +448,10 @@ export function useCanvasPointer({
     if (!dragging) return
     if (dragging.type === 'pinch') return
     if (event.pointerId !== dragging.pointerId) return
+    if (dragging.type === 'erase') {
+      eraseAt(screenPoint(event))
+      return
+    }
     if (dragging.type === 'pan') {
       setPan({
         x: dragging.origin.x + event.clientX - dragging.start.x,
@@ -384,19 +463,28 @@ export function useCanvasPointer({
     if (dragging.type === 'resize') {
       const dx = point.x - dragging.start.x
       const dy = point.y - dragging.start.y
+      const frame = dragging.aspectRatio
+        ? resizeShapeFrame(
+            dragging,
+            dragging.direction,
+            dx,
+            dy,
+            !event.shiftKey,
+            MIN_WIDTH,
+            MIN_HEIGHT
+          )
+        : undefined
       const left = dragging.direction.includes('w')
       const top = dragging.direction.includes('n')
-      const nextW = Math.max(
-        MIN_WIDTH,
-        dragging.w + (left ? -dx : dragging.direction.includes('e') ? dx : 0)
-      )
-      const nextH = Math.max(
-        MIN_HEIGHT,
-        dragging.h + (top ? -dy : dragging.direction.includes('s') ? dy : 0)
-      )
+      const nextW =
+        frame?.w ??
+        Math.max(MIN_WIDTH, dragging.w + (left ? -dx : dragging.direction.includes('e') ? dx : 0))
+      const nextH =
+        frame?.h ??
+        Math.max(MIN_HEIGHT, dragging.h + (top ? -dy : dragging.direction.includes('s') ? dy : 0))
       const patch = {
-        x: left ? dragging.x + dragging.w - nextW : dragging.x,
-        y: top ? dragging.y + dragging.h - nextH : dragging.y,
+        x: frame?.x ?? (left ? dragging.x + dragging.w - nextW : dragging.x),
+        y: frame?.y ?? (top ? dragging.y + dragging.h - nextH : dragging.y),
         w: nextW,
         h: nextH,
         ...(dragging.fontSize !== undefined
@@ -466,7 +554,7 @@ export function useCanvasPointer({
         setDrawing(null)
         return
       }
-      const snapped = held ?? (autoSnap ? recognize(stroke.points, UNATTENDED) : null)
+      const snapped = autoSnap ? (held ?? recognize(stroke.points, UNATTENDED)) : null
       // The freehand version is what stays when nothing snaps, and what undo
       // brings back when something does.
       const drawn = finishStroke({ ...stroke, points: tidyStroke(stroke.points) })
@@ -514,6 +602,7 @@ export function useCanvasPointer({
     beginDrag,
     beginResize,
     beginDrawing,
+    beginErase,
     beginPan,
     onTouchPointerDown,
     onTouchPointerMove,
