@@ -2,6 +2,7 @@ import JSZip from 'jszip'
 import { boardFilename, downloadBlob } from './download'
 import type { Board } from '@/features/board/types'
 import { isBoardData } from '@/features/board/types'
+import { normalizeBoardShapes } from '@/features/board/lib/objects'
 import type { WorkspaceDocument } from '@/features/workspace/model'
 import { isWorkspaceDocument } from '@/features/workspace/model'
 import {
@@ -22,11 +23,11 @@ export async function createWorkspaceArchive(
   if (!isWorkspaceDocument(document)) throw Error('Invalid workspace')
   const assets = new Map(savedAssets)
   const cache = new Map<string, Promise<{ path: string; mediaType: string }>>()
-  const boards = await extractMedia(document.boards, assets, cache)
+  const boards = await extractMedia(document.boards.map(normalizeBoardShapes), assets, cache)
   const snapshots = await Promise.all(
     document.snapshots.map(async (snapshot) => ({
       ...snapshot,
-      boards: await extractMedia(snapshot.boards, assets, cache)
+      boards: await extractMedia(snapshot.boards.map(normalizeBoardShapes), assets, cache)
     }))
   )
   for (const path of referencedMediaPaths([...boards, ...snapshots.flatMap((item) => item.boards)]))

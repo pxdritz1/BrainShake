@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resizeStroke } from './objects'
+import { normalizeBoardShapes, normalizeShape, resizeShapeFrame, resizeStroke } from './objects'
 
 describe('resizeStroke', () => {
   it('scales the drawn points with the resized frame', () => {
@@ -30,6 +30,46 @@ describe('resizeStroke', () => {
       w: 150,
       h: 80,
       points: [{ x: 75, y: 40 }]
+    })
+  })
+})
+
+describe('shape geometry', () => {
+  it('normalizes a legacy shape to a square without enlarging it or moving its center', () => {
+    const shape = { id: 'shape', type: 'shape' as const, x: 10, y: 20, w: 250, h: 180 }
+    expect(normalizeShape(shape)).toMatchObject({ x: 45, y: 20, w: 180, h: 180 })
+  })
+
+  it('normalizes shapes in a board and leaves other objects alone', () => {
+    const image = { id: 'image', type: 'image' as const, x: 0, y: 0, w: 250, h: 180, src: '' }
+    const result = normalizeBoardShapes({
+      id: 'board',
+      name: 'Board',
+      objects: [{ id: 'shape', type: 'shape', x: 0, y: 0, w: 250, h: 180 }, image]
+    })
+    expect(result.objects[0]).toMatchObject({ x: 35, y: 0, w: 180, h: 180 })
+    expect(result.objects[1]).toBe(image)
+  })
+
+  it('keeps the aspect ratio while resizing from a corner and an edge', () => {
+    const corner = resizeShapeFrame({ x: 10, y: 20, w: 200, h: 100 }, 'se', 100, 20, true)
+    expect(corner).toEqual({ x: 10, y: 20, w: 300, h: 150 })
+    const edge = resizeShapeFrame({ x: 10, y: 20, w: 200, h: 100 }, 'e', 100, 0, true)
+    expect(edge).toEqual({ x: 10, y: -5, w: 300, h: 150 })
+  })
+
+  it('allows Shift resizing to change the aspect ratio', () => {
+    expect(resizeShapeFrame({ x: 0, y: 0, w: 200, h: 100 }, 'se', 100, 50, false)).toEqual({
+      x: 0,
+      y: 0,
+      w: 300,
+      h: 150
+    })
+    expect(resizeShapeFrame({ x: 0, y: 0, w: 200, h: 100 }, 'se', 100, 0, false)).toEqual({
+      x: 0,
+      y: 0,
+      w: 300,
+      h: 100
     })
   })
 })

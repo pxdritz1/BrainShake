@@ -1,5 +1,6 @@
 import type { WorkspaceSnapshot, SnapshotSummary } from './model'
 import { isValidSnapshotGraph, isWorkspaceSnapshot } from './model'
+import { normalizeBoardShapes } from '@/features/board/lib/objects'
 import { extractMedia, referencedMediaPaths, restoreMedia, validateMediaAssets } from './media'
 
 const DATABASE_NAME = 'brainshake-workspace-v2'
@@ -41,7 +42,10 @@ async function storedSnapshots(): Promise<WorkspaceSnapshot[]> {
       db.transaction(SNAPSHOTS, 'readonly').objectStore(SNAPSHOTS).getAll()
     )
     if (!values.every(isWorkspaceSnapshot)) throw Error('Invalid saved snapshots')
-    return values
+    return values.map((snapshot) => ({
+      ...snapshot,
+      boards: snapshot.boards.map(normalizeBoardShapes)
+    }))
   } finally {
     db.close()
   }
@@ -66,7 +70,10 @@ async function getAsset(path: string): Promise<Blob | undefined> {
 }
 
 async function hydrateSnapshot(snapshot: WorkspaceSnapshot): Promise<WorkspaceSnapshot> {
-  return { ...snapshot, boards: await restoreMedia(snapshot.boards, getAsset) }
+  return {
+    ...snapshot,
+    boards: await restoreMedia(snapshot.boards.map(normalizeBoardShapes), getAsset)
+  }
 }
 
 export async function loadSnapshot(id: string): Promise<WorkspaceSnapshot> {
@@ -106,7 +113,10 @@ export async function loadArchiveSnapshots(): Promise<{
 
 export async function saveSnapshot(snapshot: WorkspaceSnapshot): Promise<void> {
   const assets = new Map<string, Blob>()
-  const stored = { ...snapshot, boards: await extractMedia(snapshot.boards, assets) }
+  const stored = {
+    ...snapshot,
+    boards: await extractMedia(snapshot.boards.map(normalizeBoardShapes), assets)
+  }
   const db = await openDatabase()
   try {
     const tx = db.transaction([SNAPSHOTS, ASSETS], 'readwrite')
@@ -150,7 +160,7 @@ export async function replaceSnapshots(
   const stored = await Promise.all(
     snapshots.map(async (snapshot) => ({
       ...snapshot,
-      boards: await extractMedia(snapshot.boards, assets, cache)
+      boards: await extractMedia(snapshot.boards.map(normalizeBoardShapes), assets, cache)
     }))
   )
   for (const snapshot of stored)

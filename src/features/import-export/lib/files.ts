@@ -1,5 +1,19 @@
 import type { CanvasItem } from '@/features/board/types'
 
+// Estimate a readable starting frame; the editor keeps overflow scrollable.
+export function clipboardTextSize(text: string) {
+  const lines = text.split(/\r\n?|\n/)
+  const longestLine = Math.max(1, ...lines.map((line) => [...line].length))
+  const width = Math.max(240, Math.min(480, longestLine * 9 + 40))
+  const charactersPerLine = Math.max(1, Math.floor((width - 40) / 9))
+  const wrappedLines = lines.reduce(
+    (total, line) => total + Math.max(1, Math.ceil([...line].length / charactersPerLine)),
+    0
+  )
+  const height = Math.max(120, Math.min(480, wrappedLines * 28 + 32))
+  return { w: width, h: height }
+}
+
 export function readFileAsDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader()

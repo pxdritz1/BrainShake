@@ -7,6 +7,7 @@ import {
   moveObjects,
   patchObject,
   removeObjects,
+  resizeShapeFrame,
   resizeStroke
 } from '@/features/board/lib/objects'
 import type { CanvasItem, Point } from '@/features/board/types'
@@ -49,6 +50,7 @@ type Dragging =
       direction: string
       points?: Point[]
       fontSize?: number
+      aspectRatio?: number
     }
   | { type: 'pinch' }
   | { type: 'pan'; pointerId: number; start: Point; origin: Point }
@@ -133,7 +135,11 @@ export function useCanvasPointer({
             y: current.y + point.y
           }))
           const gesture = recognizeGesture(points, board.objects)
-          return { ...current, gesture, snapped: gesture ? null : recognize(current.points) }
+          return {
+            ...current,
+            gesture,
+            snapped: gesture || !autoSnap ? null : recognize(current.points, UNATTENDED)
+          }
         })
       }, HOLD_DELAY)
     }
@@ -222,7 +228,8 @@ export function useCanvasPointer({
       h: item.h,
       direction,
       points: item.type === 'stroke' ? item.points : undefined,
-      fontSize: item.type === 'text' ? item.fontSize || 18 : undefined
+      fontSize: item.type === 'text' ? item.fontSize || 18 : undefined,
+      aspectRatio: item.type === 'shape' ? item.w / item.h : undefined
     })
   }
 
@@ -384,19 +391,28 @@ export function useCanvasPointer({
     if (dragging.type === 'resize') {
       const dx = point.x - dragging.start.x
       const dy = point.y - dragging.start.y
+      const frame = dragging.aspectRatio
+        ? resizeShapeFrame(
+            dragging,
+            dragging.direction,
+            dx,
+            dy,
+            !event.shiftKey,
+            MIN_WIDTH,
+            MIN_HEIGHT
+          )
+        : undefined
       const left = dragging.direction.includes('w')
       const top = dragging.direction.includes('n')
-      const nextW = Math.max(
-        MIN_WIDTH,
-        dragging.w + (left ? -dx : dragging.direction.includes('e') ? dx : 0)
-      )
-      const nextH = Math.max(
-        MIN_HEIGHT,
-        dragging.h + (top ? -dy : dragging.direction.includes('s') ? dy : 0)
-      )
+      const nextW =
+        frame?.w ??
+        Math.max(MIN_WIDTH, dragging.w + (left ? -dx : dragging.direction.includes('e') ? dx : 0))
+      const nextH =
+        frame?.h ??
+        Math.max(MIN_HEIGHT, dragging.h + (top ? -dy : dragging.direction.includes('s') ? dy : 0))
       const patch = {
-        x: left ? dragging.x + dragging.w - nextW : dragging.x,
-        y: top ? dragging.y + dragging.h - nextH : dragging.y,
+        x: frame?.x ?? (left ? dragging.x + dragging.w - nextW : dragging.x),
+        y: frame?.y ?? (top ? dragging.y + dragging.h - nextH : dragging.y),
         w: nextW,
         h: nextH,
         ...(dragging.fontSize !== undefined
@@ -466,7 +482,7 @@ export function useCanvasPointer({
         setDrawing(null)
         return
       }
-      const snapped = held ?? (autoSnap ? recognize(stroke.points, UNATTENDED) : null)
+      const snapped = autoSnap ? (held ?? recognize(stroke.points, UNATTENDED)) : null
       // The freehand version is what stays when nothing snaps, and what undo
       // brings back when something does.
       const drawn = finishStroke({ ...stroke, points: tidyStroke(stroke.points) })

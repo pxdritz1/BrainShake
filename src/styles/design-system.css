@@ -200,18 +200,11 @@
 
 .app .canvas-shell {
   background-color: var(--canvas-custom, var(--surface));
-  background-image:
-    linear-gradient(
-      to right,
-      color-mix(in srgb, var(--line) 28%, transparent) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--line) 28%, transparent) 1px,
-      transparent 1px
-    );
-  background-size: 32px 32px;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--line, #cdd5ce) 55%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
 }
 
 .app .canvas-object.selected .object-card {

@@ -2,6 +2,7 @@ import { seedObjects } from './constants'
 import type { Board } from '../types'
 import { isBoard } from '../types'
 import { makeId } from '@/lib/id'
+import { normalizeBoardShapes } from './objects'
 
 export const STORAGE_KEYS = {
   boards: 'brainshake-boards-v1',
@@ -36,7 +37,8 @@ export function loadBoards(): Board[] {
   recoverPendingImport()
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(STORAGE_KEYS.boards) || 'null')
-    if (Array.isArray(saved) && saved.length && saved.every(isBoard)) return saved
+    if (Array.isArray(saved) && saved.length && saved.every(isBoard))
+      return saved.map(normalizeBoardShapes)
   } catch {
     // Corrupted data falls back to the seed board.
   }

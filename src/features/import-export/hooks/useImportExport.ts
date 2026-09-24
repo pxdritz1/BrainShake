@@ -5,6 +5,10 @@ import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import type { useSnapshots } from '@/features/workspace/useSnapshots'
 import { commitWorkspaceImport } from '@/features/workspace/import'
 import { WorkspaceBusyError } from '@/features/workspace/operationGate'
+import { STORAGE_KEYS } from '@/features/board/lib/storage'
+import { normalizeShape } from '@/features/board/lib/objects'
+import { isBoardItem } from '@/features/board/types'
+import { clipboardTextSize } from '../lib/files'
 
 export function useImportExport({
   editor,
@@ -29,6 +33,56 @@ export function useImportExport({
         showToast(`Could not import ${file.name}`)
       }
     }
+  }
+
+  function pasteClipboard(event: ClipboardEvent) {
+    const clipboard = event.clipboardData
+    if (!clipboard) return
+
+    const pasteInternalSelection = () => {
+      try {
+        const saved: unknown = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.clipboard) || '[]')
+        if (!Array.isArray(saved) || !saved.length || !saved.every(isBoardItem)) return
+        event.preventDefault()
+        editor.pasteSelection()
+      } catch {
+        // A missing or invalid app clipboard should leave the native paste alone.
+      }
+    }
+
+    const image = Array.from(clipboard.items)
+      .find((item) => item.kind === 'file' && item.type.startsWith('image/'))
+      ?.getAsFile()
+    if (image) {
+      event.preventDefault()
+      void importFiles([image])
+      return
+    }
+
+    const text = clipboard.getData('text/plain')
+    if (!text) {
+      pasteInternalSelection()
+      return
+    }
+
+    try {
+      const copiedItems: unknown = JSON.parse(text)
+      if (Array.isArray(copiedItems) && copiedItems.length && copiedItems.every(isBoardItem)) {
+        event.preventDefault()
+        sessionStorage.setItem(STORAGE_KEYS.clipboard, JSON.stringify(copiedItems))
+        editor.pasteSelection()
+        return
+      }
+    } catch {
+      // Plain clipboard text is created as editable Markdown below.
+    }
+
+    event.preventDefault()
+    editor.addObject('text', {
+      text,
+      editing: true,
+      ...clipboardTextSize(text)
+    })
   }
 
   function submitImageUrl(url: string) {
@@ -71,8 +125,9 @@ export function useImportExport({
     try {
       const imported = await importBrainshake(file)
       if (imported.kind === 'board') {
+        const objects = imported.data.objects.map(normalizeShape)
         await snapshots.runExclusive(async () => {
-          editor.commit((current) => ({ ...current, ...imported.data, id: current.id }))
+          editor.commit((current) => ({ ...current, ...imported.data, objects, id: current.id }))
           editor.setSelected([])
         })
         showToast('Board imported')
@@ -121,6 +176,7 @@ export function useImportExport({
     closeUrlDialog: () => setUrlOpen(false),
     submitImageUrl,
     importFiles,
+    pasteClipboard,
     importBoardFile,
     exportAsBrainshake,
     exportAsJson

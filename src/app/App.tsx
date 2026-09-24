@@ -119,7 +119,7 @@ export default function App() {
     redo: editor.redo,
     selectAll: editor.selectAll,
     copy: editor.copySelection,
-    paste: editor.pasteSelection,
+    paste: transfer.pasteClipboard,
     remove: editor.removeSelection,
     cancel: () => {
       editor.setSelected([])

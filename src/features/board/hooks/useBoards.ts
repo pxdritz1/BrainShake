@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { makeId } from '@/lib/id'
 import { loadBoards, loadWorkspaceIdentity, saveBoards, STORAGE_KEYS } from '../lib/storage'
+import { normalizeBoardShapes } from '../lib/objects'
 import type { Board } from '../types'
 
 export function useBoards({ onSaveError }: { onSaveError: () => void }) {
@@ -100,10 +101,11 @@ export function useBoards({ onSaveError }: { onSaveError: () => void }) {
   }
 
   function replaceWorkspace(nextBoards: Board[], activeBoardId: string, id: string, name: string) {
-    const active = nextBoards.find((item) => item.id === activeBoardId)
-    if (!active || !nextBoards.length) throw Error('Invalid workspace')
+    const normalizedBoards = nextBoards.map(normalizeBoardShapes)
+    const active = normalizedBoards.find((item) => item.id === activeBoardId)
+    if (!active || !normalizedBoards.length) throw Error('Invalid workspace')
     boardRef.current = active
-    setBoards(nextBoards)
+    setBoards(normalizedBoards)
     setBoard(active)
     setWorkspace({ id, name })
   }

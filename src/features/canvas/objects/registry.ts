@@ -37,7 +37,7 @@ export const objectRegistry: Record<string, ObjectConfig> = {
     Component: ShapeObject,
     framed: false,
     className: 'shape-object',
-    defaultSize: { w: 250, h: 180 }
+    defaultSize: { w: 180, h: 180 }
   },
   stroke: { Component: StrokeObject, framed: false, className: 'stroke-object' }
 }

@@ -1,8 +1,13 @@
 import { useEffect } from 'react'
 import { TOOL_SHORTCUTS } from '@/features/board/lib/constants'
 
-function isTyping() {
-  return ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName || '')
+function isTyping(target: EventTarget | null = document.activeElement) {
+  if (!(target instanceof HTMLElement)) return false
+  return (
+    ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) ||
+    target.isContentEditable ||
+    Boolean(target.closest('input, textarea, select, [contenteditable="true"]'))
+  )
 }
 
 // Global shortcuts. Re-subscribes on every render so handlers always see fresh state.
@@ -21,7 +26,7 @@ export function useKeyboardShortcuts({
   redo: () => void
   selectAll: () => void
   copy: () => void
-  paste: () => void
+  paste: (event: ClipboardEvent) => void
   remove: () => void
   cancel: () => void
   setTool: (tool: string) => void
@@ -46,8 +51,7 @@ export function useKeyboardShortcuts({
       }
       const modActions: Record<string, (() => void) | undefined> = {
         a: selectAll,
-        c: copy,
-        v: paste
+        c: copy
       }
       if (mod && modActions[key] && !typing) {
         event.preventDefault()
@@ -60,7 +64,15 @@ export function useKeyboardShortcuts({
       const shortcut = (TOOL_SHORTCUTS as Record<string, string | undefined>)[key]
       if (shortcut) setTool(shortcut)
     }
+    const onPaste = (event: ClipboardEvent) => {
+      if (isTyping(event.target)) return
+      paste(event)
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('paste', onPaste)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('paste', onPaste)
+    }
   }, [cancel, copy, enabled, paste, redo, remove, selectAll, setTool, undo])
 }
