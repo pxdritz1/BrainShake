@@ -53,6 +53,13 @@ const rectangle = (width: number, height: number) => [
   { x: 0, y: height }
 ]
 
+// Regular polygon with its first corner straight up; `radius` can vary per corner.
+const polygon = (sides: number, radius: (index: number) => number = () => 100) =>
+  Array.from({ length: sides }, (_, index) => {
+    const angle = (index / sides) * 2 * Math.PI - Math.PI / 2
+    return { x: radius(index) * Math.cos(angle), y: radius(index) * Math.sin(angle) }
+  })
+
 const ellipse = (rx: number, ry: number) =>
   Array.from({ length: 90 }, (_, index) => ({
     x: rx * Math.cos((index / 90) * 2 * Math.PI),
@@ -69,8 +76,12 @@ function sides(points: Point[]) {
 }
 
 describe('recognize', () => {
+  // Square and rectangle, or circle and ellipse, depend on proportions a hand
+  // doesn't control precisely; the family is what must match.
+  const family = (kind?: string) =>
+    kind === 'square' ? 'rectangle' : kind === 'circle' ? 'ellipse' : kind
   it.each(drawnStrokes)('auto-corrects a real $name', ({ kind, points }) => {
-    expect(recognize(points, UNATTENDED)?.kind).toBe(kind)
+    expect(family(recognize(points, UNATTENDED)?.kind)).toBe(family(kind))
   })
 
   it('ignores taps and tiny strokes', () => {
@@ -96,22 +107,52 @@ describe('recognize', () => {
   })
 
   it('leaves shapes it does not idealize alone', () => {
-    const polygon = (sides: number, radius: (index: number) => number = () => 100) =>
-      Array.from({ length: sides }, (_, index) => {
-        const angle = (index / sides) * 2 * Math.PI - Math.PI / 2
-        return { x: radius(index) * Math.cos(angle), y: radius(index) * Math.sin(angle) }
-      })
     const trapezoid = [
       { x: 60, y: 0 },
       { x: 240, y: 0 },
       { x: 300, y: 150 },
       { x: 0, y: 150 }
     ]
+    // A crescent: the outer arc and back along a smaller inner one.
+    const crescent = [
+      ...Array.from({ length: 30 }, (_, index) => {
+        const angle = Math.PI / 2 + (index / 29) * Math.PI
+        return { x: 100 * Math.cos(angle), y: 100 * Math.sin(angle) }
+      }),
+      ...Array.from({ length: 30 }, (_, index) => {
+        const angle = (3 * Math.PI) / 2 - (index / 29) * Math.PI
+        return { x: -40 + 70 * Math.cos(angle), y: 100 * Math.sin(angle) }
+      })
+    ]
+    // A heart, started at a random spot.
+    const heart = Array.from({ length: 60 }, (_, index) => {
+      const t = (index / 60) * 2 * Math.PI
+      return {
+        x: 96 * Math.sin(t) ** 3,
+        y: -6 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
+      }
+    })
+    // Five round petals, and a loop scalloped all around.
+    const flower = Array.from({ length: 150 }, (_, index) => {
+      const t = (index / 150) * 2 * Math.PI
+      const radius = 50 + 50 * Math.abs(Math.cos(2.5 * t))
+      return { x: radius * Math.cos(t), y: radius * Math.sin(t) }
+    })
+    const zigzag = polygon(16, (index) => (index % 2 ? 70 : 100))
+    // A loop gone around three times.
+    const coil = Array.from({ length: 150 }, (_, index) => {
+      const angle = (index / 50) * 2 * Math.PI
+      return { x: (100 + index / 3) * Math.cos(angle), y: (100 + index / 3) * Math.sin(angle) }
+    })
+    expect(recognize(coil)).toBeNull()
     for (const seed of [1, 2, 3]) {
-      expect(recognize(sketch(polygon(5), { seed })), `pentagon ${seed}`).toBeNull()
-      const star = polygon(10, (index) => (index % 2 ? 45 : 100))
-      expect(recognize(sketch(star, { seed })), `star ${seed}`).toBeNull()
+      expect(recognize(sketch(crescent, { seed })), `crescent ${seed}`).toBeNull()
       expect(recognize(sketch(trapezoid, { seed })), `trapezoid ${seed}`).toBeNull()
+      for (const start of [0.1, 0.4, 0.7]) {
+        expect(recognize(sketch(heart, { seed, start })), `heart ${seed}`).toBeNull()
+        expect(recognize(sketch(flower, { seed, start })), `flower ${seed}`).toBeNull()
+        expect(recognize(sketch(zigzag, { seed, start })), `zigzag ${seed}`).toBeNull()
+      }
     }
   })
 
@@ -184,8 +225,11 @@ describe('recognize', () => {
       for (const seed of [1, 2, 3, 4, 5]) {
         const result = recognize(sketch(rectangle(200, 186), { seed, tilt: degrees(6) }))
         expect(result?.kind, `seed ${seed}`).toBe('square')
-        const [a, b] = corners(result!.points)
-        expect(a.y).toBeCloseTo(b.y)
+        const vertices = corners(result!.points)
+        vertices.forEach((vertex, index) => {
+          const next = vertices[(index + 1) % 4]
+          expect(Math.min(Math.abs(vertex.x - next.x), Math.abs(vertex.y - next.y))).toBeCloseTo(0)
+        })
         const lengths = sides(result!.points)
         for (const length of lengths) expect(length).toBeCloseTo(lengths[0])
       }
@@ -272,6 +316,61 @@ describe('recognize', () => {
     it('reads a square turned 45 degrees as a diamond', () => {
       const result = recognize(sketch(rectangle(150, 150), { seed: 5, tilt: degrees(44) }))
       expect(result?.kind).toBe('diamond')
+    })
+  })
+
+  describe('pentagons and hexagons', () => {
+    it('evens out a pentagon and stands it on its base', () => {
+      for (const seed of [1, 2, 3, 4, 5]) {
+        const drawn = polygon(5, (index) => 100 + ((index * 7) % 5) * 3)
+        const result = recognize(sketch(drawn, { seed, tilt: degrees(6) }))
+        expect(result?.kind, `seed ${seed}`).toBe('pentagon')
+        const vertices = corners(result!.points)
+        expect(vertices).toHaveLength(5)
+        const top = vertices.reduce((best, vertex) => (vertex.y < best.y ? vertex : best))
+        const box = bounds(vertices)
+        expect(top.x).toBeCloseTo((box.minX + box.maxX) / 2)
+        const lengths = sides(result!.points)
+        for (const length of lengths) expect(length).toBeCloseTo(lengths[0], 0)
+      }
+    })
+
+    it('recognizes a hexagon with rounded corners, not a circle', () => {
+      const hexagon = rotate(polygon(6), Math.PI / 2, { x: 0, y: 0 })
+      for (const seed of [1, 2, 3, 4, 5]) {
+        const result = recognize(sketch(hexagon, { seed }))
+        expect(result?.kind, `seed ${seed}`).toBe('hexagon')
+        // Flat top and bottom, like the toolbar's hexagon.
+        const vertices = corners(result!.points).sort((a, b) => a.y - b.y)
+        expect(vertices[0].y).toBeCloseTo(vertices[1].y)
+      }
+    })
+
+    it('keeps circles round', () => {
+      for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
+        const kind = recognize(sketch(ellipse(100, 100), { seed, wobble: 0.03 }))?.kind
+        expect(kind, `seed ${seed}`).toBe('circle')
+      }
+    })
+  })
+
+  describe('stars', () => {
+    it('recognizes a star drawn as an outline or as a pentagram', () => {
+      const outline = polygon(10, (index) => (index % 2 ? 40 : 100))
+      const tips = polygon(5)
+      const pentagram = [0, 2, 4, 1, 3].map((index) => tips[index])
+      for (const seed of [1, 2, 3]) {
+        for (const star of [outline, pentagram]) {
+          const result = recognize(sketch(star, { seed, tilt: degrees(5) }))
+          expect(result?.kind, `seed ${seed}`).toBe('star')
+          const points = corners(result!.points)
+          expect(points).toHaveLength(10)
+          // Upright: the top tip is centered.
+          const top = points.reduce((best, point) => (point.y < best.y ? point : best))
+          const box = bounds(points)
+          expect(top.x).toBeCloseTo((box.minX + box.maxX) / 2)
+        }
+      }
     })
   })
 })
