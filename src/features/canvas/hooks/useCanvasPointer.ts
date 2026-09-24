@@ -4,6 +4,7 @@ import { makeId } from '@/lib/id'
 import {
   addObjects,
   finishStroke,
+  hitTestObject,
   moveObjects,
   patchObject,
   removeObjects,
@@ -53,6 +54,7 @@ type Dragging =
       aspectRatio?: number
     }
   | { type: 'pinch' }
+  | { type: 'erase'; pointerId: number }
   | { type: 'pan'; pointerId: number; start: Point; origin: Point }
 
 export type Drawing = CanvasItem & {
@@ -83,6 +85,8 @@ export function useCanvasPointer({
   const [drawing, setDrawing] = useState<Drawing | null>(null)
   const spacePressed = useRef(false)
   const hold = useRef<{ timer: number; anchor: Point } | null>(null)
+  const erasedDuringGesture = useRef(new Set<string>())
+  const eraserHistoryStarted = useRef(false)
   const touchPoints = useRef(new Map<number, Point>())
   const pinch = useRef<{
     distance: number
@@ -255,6 +259,50 @@ export function useCanvasPointer({
     })
   }
 
+  function eraseAt(point: Point) {
+    const item = [...board.objects].reverse().find((candidate) => {
+      return (
+        isCanvasItem(candidate) &&
+        !candidate.locked &&
+        !erasedDuringGesture.current.has(candidate.id) &&
+        hitTestObject(candidate, point, 9 / viewport.zoom)
+      )
+    })
+    if (!item || !isCanvasItem(item)) return
+    erasedDuringGesture.current.add(item.id)
+    commit(
+      (current) => ({
+        ...current,
+        objects: current.objects.filter(
+          (candidate) =>
+            candidate.id !== item.id &&
+            !(
+              isConnectorItem(candidate) &&
+              (candidate.from === item.id || candidate.to === item.id)
+            )
+        )
+      }),
+      !eraserHistoryStarted.current
+    )
+    eraserHistoryStarted.current = true
+    setSelected((current) => current.filter((id) => id !== item.id))
+  }
+
+  function beginErase(event: React.PointerEvent<HTMLDivElement>) {
+    if (tool !== 'eraser') return
+    if (isSpacePan(event)) {
+      beginPan(event)
+      return
+    }
+    if (event.button !== 0) return
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+    erasedDuringGesture.current = new Set()
+    eraserHistoryStarted.current = false
+    setSelected([])
+    setDragging({ type: 'erase', pointerId: event.pointerId })
+    eraseAt(screenPoint(event))
+  }
+
   function startPinch() {
     const points = [...touchPoints.current.values()].slice(0, 2)
     if (points.length < 2) return
@@ -380,6 +428,10 @@ export function useCanvasPointer({
     if (!dragging) return
     if (dragging.type === 'pinch') return
     if (event.pointerId !== dragging.pointerId) return
+    if (dragging.type === 'erase') {
+      eraseAt(screenPoint(event))
+      return
+    }
     if (dragging.type === 'pan') {
       setPan({
         x: dragging.origin.x + event.clientX - dragging.start.x,
@@ -530,6 +582,7 @@ export function useCanvasPointer({
     beginDrag,
     beginResize,
     beginDrawing,
+    beginErase,
     beginPan,
     onTouchPointerDown,
     onTouchPointerMove,

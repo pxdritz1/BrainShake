@@ -10,6 +10,7 @@ describe('getNextToolFromArrow', () => {
 
   it('uses the vertical dock axis for side docks', () => {
     expect(getNextToolFromArrow('hand', 'ArrowDown', 'right', true)).toBe('text')
+    expect(getNextToolFromArrow('pen', 'ArrowDown', 'right', true)).toBe('eraser')
     expect(getNextToolFromArrow('select', 'ArrowUp', 'left', true)).toBe('connector')
     expect(getNextToolFromArrow('select', 'ArrowRight', 'left', true)).toBeNull()
   })

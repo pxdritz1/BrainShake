@@ -1,4 +1,12 @@
-export const TOOL_SEQUENCE = ['select', 'hand', 'text', 'sticky', 'pen', 'connector'] as const
+export const TOOL_SEQUENCE = [
+  'select',
+  'hand',
+  'text',
+  'sticky',
+  'pen',
+  'eraser',
+  'connector'
+] as const
 
 type ToolId = (typeof TOOL_SEQUENCE)[number]
 type ArrowKey = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'

@@ -23,6 +23,38 @@ export function normalizeBoardShapes(board: Board): Board {
   return changed ? { ...board, objects } : board
 }
 
+export function hitTestObject(item: CanvasItem, point: Point, tolerance = 0): boolean {
+  if (item.type !== 'stroke' || !item.points?.length) {
+    return (
+      point.x >= item.x - tolerance &&
+      point.x <= item.x + item.w + tolerance &&
+      point.y >= item.y - tolerance &&
+      point.y <= item.y + item.h + tolerance
+    )
+  }
+
+  const radius = tolerance + (item.strokeWidth || 4) / 2
+  const radiusSquared = radius * radius
+  const points = item.points.map((sample) => ({ x: item.x + sample.x, y: item.y + sample.y }))
+  if (points.length === 1)
+    return (points[0].x - point.x) ** 2 + (points[0].y - point.y) ** 2 <= radiusSquared
+  return points.slice(1).some((end, index) => {
+    const start = points[index]
+    const dx = end.x - start.x
+    const dy = end.y - start.y
+    const lengthSquared = dx * dx + dy * dy
+    const projection = lengthSquared
+      ? Math.max(
+          0,
+          Math.min(1, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared)
+        )
+      : 0
+    const nearestX = start.x + projection * dx
+    const nearestY = start.y + projection * dy
+    return (point.x - nearestX) ** 2 + (point.y - nearestY) ** 2 <= radiusSquared
+  })
+}
+
 export function resizeShapeFrame(
   frame: { x: number; y: number; w: number; h: number },
   direction: string,

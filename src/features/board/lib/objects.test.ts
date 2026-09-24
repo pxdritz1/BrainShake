@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { normalizeBoardShapes, normalizeShape, resizeShapeFrame, resizeStroke } from './objects'
+import {
+  hitTestObject,
+  normalizeBoardShapes,
+  normalizeShape,
+  resizeShapeFrame,
+  resizeStroke
+} from './objects'
 
 describe('resizeStroke', () => {
   it('scales the drawn points with the resized frame', () => {
@@ -71,5 +77,32 @@ describe('shape geometry', () => {
       w: 300,
       h: 100
     })
+  })
+})
+
+describe('hitTestObject', () => {
+  it('hits the visible stroke path rather than its full bounding box', () => {
+    const stroke = {
+      id: 'stroke',
+      type: 'stroke',
+      x: 10,
+      y: 20,
+      w: 100,
+      h: 100,
+      strokeWidth: 4,
+      points: [
+        { x: 0, y: 0 },
+        { x: 100, y: 100 }
+      ]
+    }
+    expect(hitTestObject(stroke, { x: 60, y: 70 })).toBe(true)
+    expect(hitTestObject(stroke, { x: 10, y: 120 })).toBe(false)
+    expect(hitTestObject(stroke, { x: 60, y: 78 }, 6)).toBe(true)
+  })
+
+  it('hits objects by their frame with the given eraser tolerance', () => {
+    const note = { id: 'note', type: 'text', x: 20, y: 30, w: 100, h: 80 }
+    expect(hitTestObject(note, { x: 125, y: 50 }, 6)).toBe(true)
+    expect(hitTestObject(note, { x: 127, y: 50 }, 6)).toBe(false)
   })
 })

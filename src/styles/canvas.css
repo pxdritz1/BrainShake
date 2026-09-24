@@ -16,6 +16,9 @@
 .canvas-shell.is-panning {
   cursor: grabbing;
 }
+.canvas-shell.tool-eraser {
+  cursor: cell;
+}
 .canvas-shell.grid-off {
   background-image: none !important;
 }
