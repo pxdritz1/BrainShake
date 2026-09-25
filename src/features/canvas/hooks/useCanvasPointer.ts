@@ -4,16 +4,16 @@ import { makeId } from '@/lib/id'
 import {
   addObjects,
   connectorEndpoints,
+  eraserSweepTouchesRect,
   finishStroke,
   hitTestSegment,
-  hitTestObject,
   moveObjects,
   patchObject,
   removeObjects,
   resizeShapeFrame,
   resizeStroke
 } from '@/features/board/lib/objects'
-import type { CanvasItem, Point } from '@/features/board/types'
+import type { CanvasItem, EraserMark, Point } from '@/features/board/types'
 import { isCanvasItem, isConnectorItem } from '@/features/board/types'
 import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import type { useViewport } from './useViewport'
@@ -52,6 +52,7 @@ type Dragging =
       h: number
       direction: string
       points?: Point[]
+      erasures?: EraserMark[]
       fontSize?: number
       aspectRatio?: number
     }
@@ -85,9 +86,11 @@ export function useCanvasPointer({
 }) {
   const [dragging, setDragging] = useState<Dragging | null>(null)
   const [drawing, setDrawing] = useState<Drawing | null>(null)
+  const [eraserCursor, setEraserCursor] = useState<Point | null>(null)
   const spacePressed = useRef(false)
   const hold = useRef<{ timer: number; anchor: Point } | null>(null)
-  const erasedDuringGesture = useRef(new Set<string>())
+  const activeErasures = useRef(new Map<string, number>())
+  const lastEraserPoint = useRef<Point | null>(null)
   const eraserHistoryStarted = useRef(false)
   const touchPoints = useRef(new Map<number, Point>())
   const pinch = useRef<{
@@ -95,7 +98,7 @@ export function useCanvasPointer({
     zoom: number
     anchor: Point
   } | null>(null)
-  const { board, commit, selected, setSelected, tool, setTool, strokeWidth } = editor
+  const { board, commit, selected, setSelected, tool, setTool, strokeWidth, eraserWidth } = editor
   const { screenPoint, pan, setPan } = viewport
 
   useEffect(() => {
@@ -234,6 +237,7 @@ export function useCanvasPointer({
       h: item.h,
       direction,
       points: item.type === 'stroke' ? item.points : undefined,
+      erasures: item.erasures,
       fontSize: item.type === 'text' ? item.fontSize || 18 : undefined,
       aspectRatio: item.type === 'shape' ? item.w / item.h : undefined
     })
@@ -261,51 +265,93 @@ export function useCanvasPointer({
     })
   }
 
-  function eraseAt(point: Point) {
-    const tolerance = 9 / viewport.zoom
-    const item = [...board.objects].reverse().find((candidate) => {
-      return (
+  function eraseBetween(startPoint: Point, endPoint: Point) {
+    const width = eraserWidth / viewport.zoom
+    const radius = width / 2
+    const touched = board.objects.filter(
+      (candidate): candidate is CanvasItem =>
         isCanvasItem(candidate) &&
         !candidate.locked &&
-        !erasedDuringGesture.current.has(candidate.id) &&
-        hitTestObject(candidate, point, tolerance)
-      )
-    })
-    const connector = item
-      ? undefined
-      : [...board.objects].reverse().find((candidate) => {
-          if (!isConnectorItem(candidate) || erasedDuringGesture.current.has(candidate.id))
-            return false
-          const from = board.objects.find(
-            (object): object is CanvasItem => isCanvasItem(object) && object.id === candidate.from
-          )
-          const to = board.objects.find(
-            (object): object is CanvasItem => isCanvasItem(object) && object.id === candidate.to
-          )
-          if (!from || !to) return false
-          const { start, end } = connectorEndpoints(from, to)
-          return hitTestSegment(point, start, end, tolerance)
-        })
-    const target = item || connector
-    if (!target) return
-    erasedDuringGesture.current.add(target.id)
+        eraserSweepTouchesRect(
+          startPoint,
+          endPoint,
+          { x: candidate.x, y: candidate.y, w: candidate.w, h: candidate.h },
+          radius
+        )
+    )
+    const connectorIds = board.objects
+      .filter(isConnectorItem)
+      .filter((connector) => {
+        const from = board.objects.find(
+          (object): object is CanvasItem => isCanvasItem(object) && object.id === connector.from
+        )
+        const to = board.objects.find(
+          (object): object is CanvasItem => isCanvasItem(object) && object.id === connector.to
+        )
+        if (!from || !to) return false
+        const { start, end } = connectorEndpoints(from, to)
+        const distance = Math.hypot(endPoint.x - startPoint.x, endPoint.y - startPoint.y)
+        const steps = Math.max(1, Math.ceil(distance / Math.max(1, radius)))
+        return Array.from({ length: steps + 1 }, (_, index) => {
+          const progress = index / steps
+          return {
+            x: startPoint.x + (endPoint.x - startPoint.x) * progress,
+            y: startPoint.y + (endPoint.y - startPoint.y) * progress
+          }
+        }).some((point) => hitTestSegment(point, start, end, radius))
+      })
+      .map((connector) => connector.id)
+    if (!touched.length && !connectorIds.length) return
+    const removedIds = new Set(
+      touched
+        .filter((item) => item.type !== 'shape' && item.type !== 'stroke')
+        .map((item) => item.id)
+    )
+    const maskableIds = new Set(
+      touched
+        .filter((item) => item.type === 'shape' || item.type === 'stroke')
+        .map((item) => item.id)
+    )
+
+    const appendMark = (item: CanvasItem): CanvasItem => {
+      const marks: EraserMark[] = item.erasures || []
+      const activeIndex = activeErasures.current.get(item.id)
+      const localEnd = { x: endPoint.x - item.x, y: endPoint.y - item.y }
+      if (activeIndex !== undefined && marks[activeIndex]) {
+        const active = marks[activeIndex]
+        const last = active.points[active.points.length - 1]
+        const points =
+          last && last.x === localEnd.x && last.y === localEnd.y
+            ? active.points
+            : [...active.points, localEnd]
+        return {
+          ...item,
+          erasures: marks.map((mark, index) => (index === activeIndex ? { ...mark, points } : mark))
+        }
+      }
+      const localStart = { x: startPoint.x - item.x, y: startPoint.y - item.y }
+      activeErasures.current.set(item.id, marks.length)
+      return {
+        ...item,
+        erasures: [...marks, { points: [localStart, localEnd], width }]
+      }
+    }
+    const connectorSet = new Set(connectorIds)
     commit(
       (current) => ({
         ...current,
-        objects: current.objects.filter(
-          (candidate) =>
-            candidate.id !== target.id &&
-            !(
-              isCanvasItem(target) &&
-              isConnectorItem(candidate) &&
-              (candidate.from === target.id || candidate.to === target.id)
-            )
-        )
+        objects: current.objects
+          .filter(
+            (item) =>
+              !connectorSet.has(item.id) &&
+              !removedIds.has(item.id) &&
+              !(isConnectorItem(item) && (removedIds.has(item.from) || removedIds.has(item.to)))
+          )
+          .map((item) => (maskableIds.has(item.id) && isCanvasItem(item) ? appendMark(item) : item))
       }),
       !eraserHistoryStarted.current
     )
     eraserHistoryStarted.current = true
-    setSelected((current) => current.filter((id) => id !== target.id))
   }
 
   function beginErase(event: React.PointerEvent<HTMLDivElement>) {
@@ -316,11 +362,27 @@ export function useCanvasPointer({
     }
     if (event.button !== 0) return
     event.currentTarget.setPointerCapture?.(event.pointerId)
-    erasedDuringGesture.current = new Set()
+    activeErasures.current = new Map()
     eraserHistoryStarted.current = false
+    const point = screenPoint(event)
+    lastEraserPoint.current = point
+    setEraserCursor({
+      x: event.clientX - event.currentTarget.getBoundingClientRect().left,
+      y: event.clientY - event.currentTarget.getBoundingClientRect().top
+    })
     setSelected([])
     setDragging({ type: 'erase', pointerId: event.pointerId })
-    eraseAt(screenPoint(event))
+    eraseBetween(point, point)
+  }
+
+  function moveEraserCursor(event: React.PointerEvent<HTMLDivElement>) {
+    if (tool !== 'eraser') return
+    const rect = event.currentTarget.getBoundingClientRect()
+    setEraserCursor({ x: event.clientX - rect.left, y: event.clientY - rect.top })
+  }
+
+  function hideEraserCursor() {
+    if (dragging?.type !== 'erase') setEraserCursor(null)
   }
 
   function startPinch() {
@@ -449,7 +511,9 @@ export function useCanvasPointer({
     if (dragging.type === 'pinch') return
     if (event.pointerId !== dragging.pointerId) return
     if (dragging.type === 'erase') {
-      eraseAt(screenPoint(event))
+      const point = screenPoint(event)
+      eraseBetween(lastEraserPoint.current || point, point)
+      lastEraserPoint.current = point
       return
     }
     if (dragging.type === 'pan') {
@@ -507,6 +571,18 @@ export function useCanvasPointer({
                 nextW,
                 nextH
               ).points
+            }
+          : {}),
+        ...(dragging.erasures
+          ? {
+              erasures: dragging.erasures.map((mark) => ({
+                ...mark,
+                width: mark.width * Math.sqrt((nextW / dragging.w) * (nextH / dragging.h)),
+                points: mark.points.map((sample) => ({
+                  x: sample.x * (nextW / dragging.w),
+                  y: sample.y * (nextH / dragging.h)
+                }))
+              }))
             }
           : {})
       }
@@ -588,6 +664,7 @@ export function useCanvasPointer({
       }
       setDrawing(null)
     }
+    if (dragging?.type === 'erase') lastEraserPoint.current = null
     if (event?.currentTarget?.hasPointerCapture?.(event.pointerId))
       event.currentTarget.releasePointerCapture(event.pointerId)
     setDragging(null)
@@ -596,6 +673,10 @@ export function useCanvasPointer({
   return {
     dragging,
     drawing,
+    eraserCursor,
+    isErasing: dragging?.type === 'erase',
+    moveEraserCursor,
+    hideEraserCursor,
     isPanning: dragging?.type === 'pan',
     isPinching: dragging?.type === 'pinch',
     selectObject,

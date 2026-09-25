@@ -54,6 +54,56 @@ export function hitTestSegment(point: Point, start: Point, end: Point, tolerance
   return (point.x - nearestX) ** 2 + (point.y - nearestY) ** 2 <= tolerance * tolerance
 }
 
+export function eraserSweepTouchesRect(
+  start: Point,
+  end: Point,
+  rect: { x: number; y: number; w: number; h: number },
+  radius: number
+) {
+  const inside = (point: Point) =>
+    point.x >= rect.x &&
+    point.x <= rect.x + rect.w &&
+    point.y >= rect.y &&
+    point.y <= rect.y + rect.h
+  if (inside(start) || inside(end)) return true
+
+  const corners = [
+    { x: rect.x, y: rect.y },
+    { x: rect.x + rect.w, y: rect.y },
+    { x: rect.x + rect.w, y: rect.y + rect.h },
+    { x: rect.x, y: rect.y + rect.h }
+  ]
+  return corners.some((corner, index) => {
+    const next = corners[(index + 1) % corners.length]
+    if (segmentsIntersect(start, end, corner, next)) return true
+    return (
+      hitTestSegment(start, corner, next, radius) ||
+      hitTestSegment(end, corner, next, radius) ||
+      hitTestSegment(corner, start, end, radius) ||
+      hitTestSegment(next, start, end, radius)
+    )
+  })
+}
+
+function segmentsIntersect(a: Point, b: Point, c: Point, d: Point) {
+  const cross = (start: Point, end: Point, point: Point) =>
+    (end.x - start.x) * (point.y - start.y) - (end.y - start.y) * (point.x - start.x)
+  const within = (start: Point, end: Point, point: Point) =>
+    point.x >= Math.min(start.x, end.x) &&
+    point.x <= Math.max(start.x, end.x) &&
+    point.y >= Math.min(start.y, end.y) &&
+    point.y <= Math.max(start.y, end.y)
+  const abC = cross(a, b, c)
+  const abD = cross(a, b, d)
+  const cdA = cross(c, d, a)
+  const cdB = cross(c, d, b)
+  if (abC === 0 && within(a, b, c)) return true
+  if (abD === 0 && within(a, b, d)) return true
+  if (cdA === 0 && within(c, d, a)) return true
+  if (cdB === 0 && within(c, d, b)) return true
+  return abC < 0 !== abD < 0 && cdA < 0 !== cdB < 0
+}
+
 export function connectorEndpoints(from: CanvasItem, to: CanvasItem) {
   const center = (item: CanvasItem) => ({ x: item.x + item.w / 2, y: item.y + item.h / 2 })
   const edge = (item: CanvasItem, target: CanvasItem) => {

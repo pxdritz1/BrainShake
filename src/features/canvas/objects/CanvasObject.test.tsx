@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest'
 import type { CanvasItem } from '@/features/board/types'
 import { CanvasObject } from './CanvasObject'
 
+vi.mock('./StickyObject', () => ({ StickyObject: () => null }))
+
 const stroke: CanvasItem = {
   id: 'stroke-1',
   type: 'stroke',
@@ -57,5 +59,34 @@ describe('CanvasObject resize handles', () => {
 
   it('does not render resize handles for a locked object', () => {
     expect(renderObject('select', { ...stroke, locked: true })).not.toContain('resize-handle')
+  })
+})
+
+describe('CanvasObject eraser behavior', () => {
+  it('renders saved erasure marks as an SVG mask', () => {
+    const markup = renderObject('select', {
+      ...stroke,
+      erasures: [
+        {
+          points: [
+            { x: 10, y: 12 },
+            { x: 20, y: 24 }
+          ],
+          width: 28
+        }
+      ]
+    })
+    expect(markup).toContain('eraser-mask-defs')
+    expect(markup).toContain('mask:url(#erasures-')
+    expect(markup).toContain('stroke-width="28"')
+  })
+
+  it('hides the title bar and close button on notes and images', () => {
+    const note = renderObject('select', { ...stroke, type: 'sticky' })
+    const image = renderObject('select', { ...stroke, type: 'image', src: 'image.png' })
+    expect(note).not.toContain('widget-titlebar')
+    expect(note).not.toContain('Close widget')
+    expect(image).not.toContain('widget-titlebar')
+    expect(image).not.toContain('Close widget')
   })
 })

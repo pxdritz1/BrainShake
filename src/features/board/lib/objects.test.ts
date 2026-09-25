@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   connectorEndpoints,
+  eraserSweepTouchesRect,
   hitTestObject,
   hitTestSegment,
   normalizeBoardShapes,
@@ -106,6 +107,20 @@ describe('hitTestObject', () => {
     const note = { id: 'note', type: 'text', x: 20, y: 30, w: 100, h: 80 }
     expect(hitTestObject(note, { x: 125, y: 50 }, 6)).toBe(true)
     expect(hitTestObject(note, { x: 127, y: 50 }, 6)).toBe(false)
+  })
+})
+
+describe('eraserSweepTouchesRect', () => {
+  it('uses distance to the rectangle rather than the sweep bounding box', () => {
+    const rect = { x: 0, y: 9, w: 1, h: 1 }
+    expect(eraserSweepTouchesRect({ x: 0, y: 0 }, { x: 10, y: 10 }, rect, 1)).toBe(false)
+    expect(eraserSweepTouchesRect({ x: 0, y: 0 }, { x: 10, y: 10 }, rect, 6)).toBe(true)
+  })
+
+  it('detects a sweep crossing the rectangle', () => {
+    expect(
+      eraserSweepTouchesRect({ x: -10, y: 5 }, { x: 20, y: 5 }, { x: 0, y: 0, w: 10, h: 10 }, 2)
+    ).toBe(true)
   })
 })
 

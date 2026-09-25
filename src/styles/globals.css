@@ -958,6 +958,17 @@ a:focus-visible,
   color: var(--muted);
   font-size: 10px;
 }
+.toolbar-menu-panel.eraser-menu label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+.eraser-size-range {
+  width: 100%;
+  accent-color: var(--primary);
+  cursor: ew-resize;
+}
 .stroke-menu-toggle {
   display: flex;
   align-items: center;

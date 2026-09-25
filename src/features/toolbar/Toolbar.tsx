@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { ShapeMenu } from './ShapeMenu'
 import { StrokeMenu } from './StrokeMenu'
+import { EraserMenu } from './EraserMenu'
 import { getNextToolFromArrow } from './toolNavigation'
 import { DOCK_DRAG_TYPE, DockDropZones } from './DockDropZones'
 
@@ -103,13 +104,21 @@ export function Toolbar({
             editor.addObject('shape', { shape, fill: 'solid', name: label })
           }
         />
-        <StrokeMenu
-          value={editor.strokeWidth}
-          onChange={editor.setStrokeWidth}
-          dockPosition={dockPosition}
-          open={openMenu === 'stroke'}
-          onOpenChange={(open) => setOpenMenu(open ? 'stroke' : null)}
-        />
+        {tool === 'eraser' ? (
+          <EraserMenu
+            value={editor.eraserWidth}
+            onChange={editor.setEraserWidth}
+            dockPosition={dockPosition}
+          />
+        ) : (
+          <StrokeMenu
+            value={editor.strokeWidth}
+            onChange={editor.setStrokeWidth}
+            dockPosition={dockPosition}
+            open={openMenu === 'stroke'}
+            onOpenChange={(open) => setOpenMenu(open ? 'stroke' : null)}
+          />
+        )}
         {editor.selected.length > 0 && (
           <Button
             variant="ghost"
