@@ -1,4 +1,5 @@
 export type Point = { x: number; y: number }
+export type EraserMark = { points: Point[]; width: number }
 
 export type CanvasItem = {
   id: string
@@ -29,6 +30,7 @@ export type CanvasItem = {
   recognizedShape?: string
   strokeWidth?: number
   points?: Point[]
+  erasures?: EraserMark[]
 }
 
 export type ConnectorItem = { id: string; type: 'connector'; from: string; to: string }
@@ -67,6 +69,18 @@ export function isBoardItem(value: unknown): value is BoardItem {
     (value.slideOrder === undefined || typeof value.slideOrder === 'number') &&
     (value.fontSize === undefined || typeof value.fontSize === 'number') &&
     (value.strokeWidth === undefined || typeof value.strokeWidth === 'number') &&
+    (value.erasures === undefined ||
+      (Array.isArray(value.erasures) &&
+        value.erasures.every(
+          (mark) =>
+            isRecord(mark) &&
+            typeof mark.width === 'number' &&
+            Array.isArray(mark.points) &&
+            mark.points.every(
+              (point) =>
+                isRecord(point) && typeof point.x === 'number' && typeof point.y === 'number'
+            )
+        ))) &&
     (value.points === undefined ||
       (Array.isArray(value.points) &&
         value.points.every(

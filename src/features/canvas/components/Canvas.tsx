@@ -80,7 +80,7 @@ export function Canvas({
       <ContextMenuTrigger asChild>
         <div
           ref={canvasRef}
-          className={`canvas-shell ${grid ? '' : 'grid-off'} ${editor.tool === 'eraser' ? 'tool-eraser' : ''} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
+          className={`canvas-shell ${grid ? '' : 'grid-off'} ${editor.tool === 'eraser' ? 'tool-eraser' : ''} ${pointer.isErasing ? 'is-erasing' : ''} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
           onWheel={presenting ? undefined : onWheel}
           onPointerDownCapture={
             presenting
@@ -113,12 +113,16 @@ export function Canvas({
                   pointer.onPointerDown(event)
                 }
           }
-          onPointerMoveCapture={pointer.onTouchPointerMove}
+          onPointerMoveCapture={(event) => {
+            pointer.moveEraserCursor(event)
+            pointer.onTouchPointerMove(event)
+          }}
           onPointerMove={pointer.onPointerMove}
           onPointerUpCapture={pointer.onTouchPointerUp}
           onPointerUp={pointer.onPointerUp}
           onPointerCancelCapture={pointer.onTouchPointerUp}
           onPointerCancel={pointer.onPointerUp}
+          onPointerLeave={pointer.hideEraserCursor}
           onDragOver={(event) => {
             event.preventDefault()
             setDropActive(true)
@@ -130,6 +134,18 @@ export function Canvas({
             onImportFiles(event.dataTransfer.files)
           }}
         >
+          {editor.tool === 'eraser' && pointer.eraserCursor && (
+            <div
+              className={`eraser-cursor ${pointer.isErasing ? 'is-active' : ''}`}
+              style={{
+                left: pointer.eraserCursor.x,
+                top: pointer.eraserCursor.y,
+                width: editor.eraserWidth,
+                height: editor.eraserWidth
+              }}
+              aria-hidden="true"
+            />
+          )}
           <div
             className="canvas-world"
             style={{

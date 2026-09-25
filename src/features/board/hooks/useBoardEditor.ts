@@ -31,6 +31,7 @@ export function useBoardEditor({
   const [selected, setSelected] = useState<string[]>([])
   const [tool, setTool] = useState<string>('select')
   const [strokeWidth, setStrokeWidth] = useState(4)
+  const [eraserWidth, setEraserWidth] = useState(28)
   const { board } = boards
   const { commit } = history
 
@@ -177,6 +178,8 @@ export function useBoardEditor({
     setTool,
     strokeWidth,
     setStrokeWidth,
+    eraserWidth,
+    setEraserWidth,
     addObject,
     updateObject,
     removeObject,

@@ -23,3 +23,12 @@ test('accepts strokes snapped to a shape', () => {
   assert.equal(isBoardItem({ ...stroke, recognizedShape: 'square' }), true)
   assert.equal(isBoardItem({ ...stroke, recognizedShape: 4 }), false)
 })
+
+test('accepts saved eraser marks and rejects malformed marks', () => {
+  const stroke = { id: 's', type: 'stroke', x: 0, y: 0, w: 10, h: 10, points: [] }
+  assert.equal(isBoardItem({ ...stroke, erasures: [{ points: [{ x: 1, y: 2 }], width: 8 }] }), true)
+  assert.equal(
+    isBoardItem({ ...stroke, erasures: [{ points: [{ x: 1, y: 2 }], width: 'wide' }] }),
+    false
+  )
+})

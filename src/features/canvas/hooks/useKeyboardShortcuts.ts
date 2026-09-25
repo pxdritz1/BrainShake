@@ -59,7 +59,11 @@ export function useKeyboardShortcuts({
         return
       }
       if (typing) return
-      if (event.key === 'Delete' || event.key === 'Backspace') remove()
+      if (event.key === 'Delete' || event.key === 'Backspace') {
+        event.preventDefault()
+        remove()
+        return
+      }
       if (event.key === 'Escape') cancel()
       const shortcut = (TOOL_SHORTCUTS as Record<string, string | undefined>)[key]
       if (shortcut) setTool(shortcut)
