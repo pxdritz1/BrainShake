@@ -19,7 +19,7 @@ Create notes, connect thoughts, draw freely, and bring assets into one focused w
 
 ## See it in action
 
-BrainShake includes light, warm, mint, dark, and OLED visual themes. The board stays dense and practical while the canvas remains yours to shape.
+BrainShake includes multiples visual themes. The board stays dense and practical while the canvas remains yours to shape.
 
 | Light | Dark |
 | --- | --- |
