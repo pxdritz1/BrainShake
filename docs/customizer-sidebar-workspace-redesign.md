@@ -1,101 +1,103 @@
-# BrainShake: referência para customizer, sidebar e workspace
+# BrainShake: reference for customizer, sidebar, and workspace
 
-## Objetivo
+## Objective
 
-Reduzir ruído visual no customizer e na navegação, deixando as ações principais fáceis de achar. A direção visual é uma interface de desktop leve, inspirada no acabamento do macOS: tipografia de sistema, superfícies claras, contornos discretos, controles compactos e estados selecionados nítidos.
+Reduce visual noise in the customizer and navigation, making the main actions easy to find. The visual direction is a lightweight desktop interface inspired by the finish of macOS: typography, spacing, and component density should feel crisp, calm, and intentional without becoming overly “skeuomorphic.”
 
-As capturas enviadas são referências visuais. A primeira documenta o customizer atual; a segunda orienta o tratamento dos controles (grupos claros, espaçamento, cores de estado e botões contidos). Os rótulos da segunda imagem não são requisitos funcionais para o BrainShake.
+The screenshots provided are visual references. The first documents the current customizer; the second guides the treatment of controls (clear grouping, spacing, state colors, and contained buttons).
 
-## Leitura do estado atual
+## Reading the current state
 
 ### Customizer
 
-- A aba `Customize` reúne grade, posição do dock, auto-hide, tema, dez cores de destaque, quatro substituições de cor da interface, desenho e acessibilidade em uma coluna longa.
-- `Theme` e os swatches de destaque são a personalização global mais frequente. Já `Header`, `Sidebar`, `Canvas` e `Panels` são ajustes finos e podem ficar em uma área avançada recolhida.
-- Os valores hexadecimais, botões `Reset` e seletores de cor criam linhas com pesos visuais diferentes. Os quatro resets aumentam a altura da página.
-- O texto de ajuda do autocorrect é extenso para um ajuste simples; as opções de acessibilidade também incluem descrições que ocupam bastante espaço.
-- No screenshot estreito, o cabeçalho de abas ocupa uma faixa inteira; o conteúdo tem rótulos pequenos, alinhamentos soltos e separadores repetidos.
+- The `Customize` tab groups grid, dock position, auto-hide, theme, ten accent colors, four interface color overrides, drawing, and accessibility in one long column.
+- `Theme` and accent swatches are the most frequent global personalization. `Header`, `Sidebar`, `Canvas`, and `Panels` are finer adjustments and can live in a collapsed advanced area.
+- Hex values, `Reset` buttons, and color pickers create rows with different visual weights. The four resets increase the page height.
+- The help text for autocorrect is long for a simple adjustment; accessibility options also include descriptions that take up a lot of space.
+- In the narrow screenshot, the tab header occupies a full band; the content has small labels, loose alignment, and repeated separators.
 
-### Sidebar de workspace
+### Workspace sidebar
 
-- A mesma coluna contém ações de canvas, importação de arquivo, importação por URL, exportação, boards, snapshots e links de rodapé.
-- Import e export aparecem também no topbar. Essa duplicação aumenta a quantidade de escolhas sem ajudar a descobrir as ações.
-- Boards e snapshots são conteúdo recorrente; importação por URL, exportação JSON e links externos são menos frequentes.
-- O snapshot pede um nome e expõe metadados de linhagem em cada item, embora a maioria das visitas provavelmente precise apenas salvar ou restaurar.
+- The same column contains canvas actions, file import, URL import, export, boards, snapshots, and footer links.
+- Import and export also appear in the topbar. This duplication increases the number of choices without helping users discover actions.
+- Boards and snapshots are recurring content; URL import, JSON export, and external links are less frequent.
+- The snapshot asks for a name and exposes lineage metadata on each item, although most visits probably only need to save or restore.
 
-### Workspace e chrome
+### Workspace and chrome
 
-- O topbar combina identidade, nome do board, estado de salvamento, export, import, tour, apresentação e configurações.
-- O dock reúne ferramentas, formas, configuração de traço, apresentação, importação e histórico, além de um puxador para movê-lo.
-- Propriedades de objetos já aparecem em um painel flutuante. A segunda imagem pode servir como linguagem para esse tipo de painel contextual: controles por grupos, poucos rótulos, ícones consistentes e seleção evidente.
-- `DM Sans` e `Space Grotesk` dão uma personalidade geométrica. Para uma direção mais Apple, o ponto de partida é uma pilha de fontes nativas; reservar uma fonte de exibição para a marca, se necessário.
+- The topbar combines identity, board name, save state, export, import, tour, presentation, and settings.
+- The dock brings together tools, shapes, stroke configuration, presentation, import, and history, plus a handle to move it.
+- Object properties already appear in a floating panel. The second image can serve as the visual language for this kind of contextual panel: grouped controls, few labels, consistent alignment, and compact rows.
+- `DM Sans` and `Space Grotesk` give a geometric personality. For a more Apple-like direction, the starting point is a native system font stack; reserve a display font for the brand only if needed.
+- The workspace feels like a dense desktop app; the visual system should prioritize scanning, rhythm, and grouping instead of raising every control to the same prominence.
 
-## Estrutura proposta
+## Proposed structure
 
-### Sidebar: duas áreas simples
+### Sidebar: two simple areas
 
 **Workspace**
 
-1. Cabeçalho pequeno com título do board e menu de ações (`Import`, `Export`, `Rename` ou ações equivalentes).
-2. Lista de boards, com `+` alinhado ao título da seção.
-3. Snapshots como seção recolhível; mostrar nome e horário curto. `Save snapshot` abre um campo compacto sob demanda.
-4. Rodapé reduzido a `Help` e `About`/`Source`; remover o parágrafo promocional fixo da coluna.
+1. Small header with board title and action menu (`Import`, `Export`, `Rename`, or equivalent actions).
+2. Board list with `+` aligned to the section title.
+3. Snapshots as a collapsible section; show name and short time. `Save snapshot` opens a compact field on demand.
+4. Footer reduced to `Help` and `About`/`Source`; remove the fixed promotional paragraph from the column.
 
 **Customize**
 
-1. **Appearance**: seletor de tema, quatro cores de destaque de sistema, disco arco-íris sem miolo para abrir o seletor de cor customizada e `More` para revelar as outras opções. Os swatches têm contorno de seleção leve e animação curta ao interagir. Grade fica no mesmo grupo.
-2. **Drawing**: autocorreção de formas com um rótulo e uma descrição curta.
-3. **Accessibility**: controles compactos para tamanho do texto, alto contraste e movimento reduzido. Opções menos frequentes ficam em `More accessibility options`.
-4. **Advanced appearance** recolhido: posição do dock, auto-hide e cores customizadas de header, sidebar, canvas e panels, em uma lista compacta com seletor e reset por linha.
+1. **Appearance**: theme selector, four system accent colors, a rainbow disc without a center to open the custom color picker, and `More` to reveal the other options. The swatches have a compact form and row-based grouping.
+2. **Drawing**: shape autocorrect with a label and a short description.
+3. **Accessibility**: compact controls for text size, high contrast, and reduced motion. Less frequent options go under `More accessibility options`.
+4. **Advanced appearance** collapsed: dock position, auto-hide, and custom colors for header, sidebar, canvas, and panels, in a compact list with selector and reset per row.
 
-Não apagar configurações existentes antes de medir uso. Primeiro escondê-las sob `Advanced`, preservar seus valores e garantir acesso por teclado.
+Do not remove existing settings before measuring usage. First hide them under `Advanced`, preserve their values, and ensure keyboard access.
 
-### Navegação e workspace
+### Navigation and workspace
 
-- Manter `Workspace` e `Customize` como duas abas claras, com um indicador selecionado estável. Evitar transformar cada categoria em outro nível de navegação.
-- Manter `Import` em um lugar primário. Uma opção é o menu de ações do board no topbar; a sidebar pode manter apenas boards e snapshots.
-- Manter export no topbar e colocar `Import board`, apresentação, painel de propriedades e tour no menu `More`. A sidebar oferece um único botão `Add to canvas` para arquivos e URLs, sem repetir exportação.
-- Preservar no dock as ferramentas usadas durante criação: selecionar, mão, texto, sticky, caneta e conector. Agrupar formas em um botão e manter undo/redo visíveis.
-- Mover apresentação e importação para ações secundárias, ou mostrar apresentação somente quando houver itens selecionáveis. Manter as funções disponíveis, mas reduzir o peso visual padrão.
-- Abrir o painel de propriedades quando um objeto está selecionado e mostrar somente os grupos pertinentes àquele tipo. Seguir a referência 2 para cores, espessura, opacidade, camadas e ações contextuais, sem manter controles irrelevantes visíveis.
+- Keep `Workspace` and `Customize` as two clear tabs with a stable selected indicator. Avoid turning each category into another level of navigation.
+- Keep `Import` in a primary place. One option is the board actions menu in the topbar; the sidebar can keep only boards and snapshots.
+- Keep export in the topbar and place `Import board`, presentation, object properties panel, and tour under `More`. The sidebar offers a single `Add to canvas` button for files and URLs without repeating the same actions elsewhere.
+- Preserve in the dock the tools used during creation: select, hand, text, sticky note, pen, and connector. Group shapes in a single button and keep undo/redo visible.
+- Move presentation and import to secondary actions, or show presentation only when there are selectable items. Keep functionality available while reducing its visual weight in the default state.
+- Open the properties panel when an object is selected and show only the groups relevant to that object type. Follow reference 2 for colors, thickness, opacity, layers, and contextual actions.
+- Use a consistent edge-to-edge rhythm so controls feel like they belong to the same system rather than a collection of scattered menu entries.
 
-## Direção visual
+## Visual direction
 
-| Elemento           | Referência recomendada                                                                                                                                                     |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Fonte              | Lexend como fonte de interface, com `-apple-system`, `BlinkMacSystemFont` e `Segoe UI` como fallback; títulos em peso 600, sem uma fonte display separada para cada painel |
-| Texto de interface | 14 px base; rótulos de seção 12–13 px; ajuda 11–12 px; evitar texto funcional abaixo de 12 px                                                                              |
-| Sidebar            | 272–288 px no desktop; padding horizontal 16 px; item de navegação com 36–40 px de altura                                                                                  |
-| Espaçamento        | escala 4 / 8 / 12 / 16 / 24 px; 16–20 px entre grupos; usar divisores apenas entre áreas principais                                                                        |
-| Superfícies        | branco ou cinza muito claro, borda neutra de 1 px, raio 10–12 px; sombra baixa só para painéis flutuantes                                                                  |
-| Seleção            | fundo de destaque suave mais contorno/foco acessível; não depender apenas da cor                                                                                           |
-| Controles          | altura 32 px para opções normais; alvos táteis de pelo menos 40 px em telas touch; swatches de 24–28 px                                                                    |
-| Ícones             | Lucide 16–18 px, sempre com alinhamento e área de clique uniformes                                                                                                         |
+| Element | Recommended reference |
+| --- | --- |
+| Font | Lexend as interface font, with `-apple-system`, `BlinkMacSystemFont`, and `Segoe UI` as fallbacks; titles at weight 600, without a separate display font for each panel |
+| Interface text | 14 px base; section labels 12–13 px; helper text 11–12 px; avoid functional text below 12 px |
+| Sidebar | 272–288 px on desktop; horizontal padding 16 px; navigation item height 36–40 px |
+| Spacing | 4 / 8 / 12 / 16 / 24 px scale; 16–20 px between groups; use dividers only between main areas |
+| Surfaces | white or very light gray, neutral 1 px border, radius 10–12 px; low shadow only for floating panels |
+| Selection | soft highlight background with accessible focus outline; do not rely on color alone |
+| Controls | 32 px height for standard options; touch targets at least 40 px; swatches 24–28 px |
+| Icons | Lucide 16–18 px, aligned and clickable with consistent hit areas |
 
-Paleta inicial: fundo geral `#F5F5F7`, superfície `#FFFFFF`, texto principal `#1D1D1F`, texto secundário `#6E6E73`, linha `#D2D2D7`, seleção suave `#E8E8ED` e azul `#0A84FF` como destaque inicial. Preferências já salvas continuam valendo. Lexend foi escolhida para dar o aspecto mais cheio e arredondado pedido, com fontes do sistema como fallback.
+Initial palette: overall background `#F5F5F7`, surface `#FFFFFF`, primary text `#1D1D1F`, secondary text `#6E6E73`, line `#D2D2D7`, soft selection `#E8E8ED`, and blue `#0A84FF` as the initial accent.
 
-## Esboço de layout
+## Layout sketch
 
 ```text
-┌──────────────────────────────────────────────────────────────────────────┐
-│ BrainShake       Nome do board                         Salvo   ⋯         │
-├──────────────────────────────┬───────────────────────────────────────────┤
-│ Workspace     Customize      │                                           │
-│                              │                                           │
-│ Boards                  +    │                 canvas                    │
-│  ● Ideias                    │                                           │
-│    Referências               │                                           │
-│                              │                                           │
-│ Snapshots               ⌄    │                                           │
-│  Hoje · 14:20                │                                           │
-│  Ontem · 17:05               │             [ dock de ferramentas ]       │
-│                              │                                           │
-│ Help                         │                                           │
-└──────────────────────────────┴───────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│ BrainShake       Board name                                Saved   ⋯ │
+├──────────────────────────────┬───────────────────────────────────────┤
+│ Workspace     Customize      │                                       │
+│                              │                                       │
+│ Boards                  +     │                canvas                 │
+│  ● Ideas                     │                                       │
+│    References               │                                       │
+│                              │                                       │
+│ Snapshots               ⌄    │                                       │
+│  Today · 14:20              │                                       │
+│  Yesterday · 17:05          │             [ tools dock ]            │
+│                              │                                       │
+│ Help                        │                                       │
+└──────────────────────────────┴───────────────────────────────────────┘
 
 Customize:
 ┌───────────────────────────┐
-│ Appearance                │
+│ Appearance               │
 │ Theme              Light⌄ │
 │ Accent       ● ● ● ● ● +  │
 │                           │
@@ -107,27 +109,32 @@ Customize:
 │ High contrast          ○  │
 │ Reduce motion          ○  │
 │                           │
-│ Advanced appearance    ›  │
+│ Advanced appearance    › │
 └───────────────────────────┘
 ```
 
-## Mapeamento para o código
+## Mapping to code
 
-- A composição da navegação está em `src/layout/Sidebar.tsx`; o estado atual alterna `workspace` e `customize`.
-- O conteúdo do customizer está em `src/layout/SidebarSettings.tsx` e `src/features/properties/AppearanceSettings.tsx`.
-- As substituições de cores globais e variáveis de tema estão em `src/features/preferences/usePreferences.ts` e `src/app/App.tsx`; manter compatibilidade com o armazenamento local.
-- Boards e snapshots estão em `src/features/board/components/BoardList.tsx` e `src/features/workspace/SnapshotList.tsx`.
-- O cabeçalho e as ações globais estão em `src/layout/Topbar.tsx`; o dock de ferramentas está em `src/features/toolbar/Toolbar.tsx`.
-- A maior parte da aparência está concentrada em `src/styles/globals.css`, com estilos de canvas em `src/styles/canvas.css`. Como há regras responsivas e overrides no fim do CSS, uma alteração futura deve consolidar as regras tocadas em vez de acrescentar outro override distante.
+- The navigation composition is in `src/layout/Sidebar.tsx`; the current state toggles `workspace` and `customize`.
+- The customizer content is in `src/layout/SidebarSettings.tsx` and `src/features/properties/AppearanceSettings.tsx`.
+- Global color overrides and theme variables are in `src/features/preferences/usePreferences.ts` and `src/app/App.tsx`; maintain compatibility with local storage.
+- Boards and snapshots are in `src/features/board/components/BoardList.tsx` and `src/features/workspace/SnapshotList.tsx`.
+- The header and global actions are in `src/layout/Topbar.tsx`; the tool dock is in `src/features/toolbar/Toolbar.tsx`.
+- Most of the visual styling is concentrated in `src/styles/globals.css`, with canvas styles in `src/styles/canvas.css`. Since there are responsive rules and overrides at the end of the CSS, a change here should be reviewed carefully before editing.
 
-## Sequência segura de reconstrução
+## Safe reconstruction sequence
 
-1. Ajustei a tipografia global para Lexend, com fallback para fontes do sistema, e aumentei o tamanho base da interface para 14 px.
-2. Reagrupei o customizer e movi opções raras para áreas avançadas, preservando as preferências e os valores salvos.
-3. Simplifiquei a sidebar de workspace, deixei snapshots recolhidos e agrupei ações secundárias no menu do topbar.
-4. Reduzi o dock ao conjunto de ferramentas e histórico usados com mais frequência; ações contextuais aparecem quando há seleção.
-5. Revisei as telas no navegador e alinhei sidebar, customizer, dock, menu de ações, painel contextual e tamanhos de toque à mesma escala de superfícies, bordas e controles. O seletor customizado usa um disco arco-íris e mantém o seletor de cor nativo ao clicar.
+1. I adjusted the global typography to Lexend, with system fallbacks, and increased the base interface size to 14 px.
+2. I regrouped the customizer and moved rare options into advanced areas, preserving preferences and saved values.
+3. I simplified the workspace sidebar, collapsed snapshots, and grouped secondary actions in the topbar menu.
+4. I reduced the dock to the most frequently used tools and history; contextual actions appear when there is a selection.
+5. I reviewed the screens in the browser and aligned the sidebar, customizer, dock, action menu, contextual panel, and touch target sizes to the same scale of surfaces, borders, and controls. The custom color selector and advanced grouping were refined to support scanning and reduce noise.
 
-## Limite da inspeção
+## Limits of the inspection
 
-O SVG é uma referência conceitual da hierarquia e do tratamento visual; não representa cada ação ou estado da interface com fidelidade de pixel. A conferência foi feita no app local com dados de demonstração, e a largura mobile deve ser validada em um viewport touch real antes de publicar ajustes responsivos adicionais.
+The SVG is a conceptual reference for hierarchy and visual treatment; it does not represent every action or interface state with pixel-perfect fidelity. The review was done in the local app with realistic data, so the final implementation should still be validated against actual usage patterns and edge cases.
+
+If you want, I can also transform this into:
+- a more polished product-spec version,
+- a concise PR description,
+- or a task breakdown with implementation steps.
