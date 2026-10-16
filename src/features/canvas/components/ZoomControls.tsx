@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Maximize, Minus, Plus } from 'lucide-react'
+import { Maximize, Minus, Plus } from '@/components/icons/PaperIcons'
 
 export function ZoomControls({
   zoom,

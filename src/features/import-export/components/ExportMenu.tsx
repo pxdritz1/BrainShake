@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { Download, FileArchive, FileText } from 'lucide-react'
+import { Download, FileArchive, FileText } from '@/components/icons/PaperIcons'
 
 export function ExportMenu({
   onExport,

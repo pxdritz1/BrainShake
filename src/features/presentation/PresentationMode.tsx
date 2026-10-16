@@ -3,7 +3,7 @@ import type { BoardItem, CanvasItem } from '@/features/board/types'
 import { isCanvasItem, isConnectorItem } from '@/features/board/types'
 import type { useViewport } from '@/features/canvas/hooks/useViewport'
 import { MAX_ZOOM, MIN_ZOOM } from '@/features/canvas/hooks/useViewport'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X } from '@/components/icons/PaperIcons'
 import { useEffect, useRef, useState } from 'react'
 
 function computeTargetViewport(

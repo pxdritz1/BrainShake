@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { usePreferences } from '@/features/preferences/usePreferences'
+<<<<<<< HEAD
+=======
+import { Minus, Plus, RotateCcw } from '@/components/icons/PaperIcons'
+>>>>>>> 4e211e1 (refactor(icons): substitui Lucide por ícones próprios)
 import { FONT_SIZES, normalizeFontSize } from './accessibility'
 
 const fontLabels = {

@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check } from '@/components/icons/PaperIcons'
 
 export function Toast({ message }: { message: string }) {
   return (

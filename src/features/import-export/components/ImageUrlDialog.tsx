@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useState } from 'react'
-import { Link2, X } from 'lucide-react'
+import { Link2, X } from '@/components/icons/PaperIcons'
 
 export function ImageUrlDialog({
   onClose,

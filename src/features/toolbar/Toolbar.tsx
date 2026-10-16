@@ -12,7 +12,7 @@ import {
   StickyNote,
   Type,
   Undo2
-} from 'lucide-react'
+} from '@/components/icons/PaperIcons'
 import { ShapeMenu } from './ShapeMenu'
 import { StrokeMenu } from './StrokeMenu'
 import { EraserMenu } from './EraserMenu'

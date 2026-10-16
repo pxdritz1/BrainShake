@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import type { usePreferences } from '@/features/preferences/usePreferences'
 import { useState } from 'react'
-import { X } from 'lucide-react'
+import { X } from '@/components/icons/PaperIcons'
 
 const STEPS = [
   'Font Size',

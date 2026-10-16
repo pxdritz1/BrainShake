@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import type React from 'react'
 import type { CanvasItem } from '@/features/board/types'
 import type { ReactNode } from 'react'
-import { X } from 'lucide-react'
+import { X } from '@/components/icons/PaperIcons'
 
 // Card with a draggable titlebar and a close button, used by framed object types.
 export function WidgetFrame({

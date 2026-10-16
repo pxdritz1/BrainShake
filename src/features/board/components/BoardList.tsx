@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import type { Board } from '@/features/board/types'
-import { Link2, Plus, X } from 'lucide-react'
+import { Link2, Plus, X } from '@/components/icons/PaperIcons'
 
 export function BoardList({
   boards,

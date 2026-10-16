@@ -1,5 +1,17 @@
 import { ContextMenuContent, ContextMenuItem } from '@/components/ui/context-menu'
+<<<<<<< HEAD
 import { ArrowUpToLine, Camera, Copy, Link2, Trash2, Unlink } from 'lucide-react'
+=======
+import {
+  ArrowUpToLine,
+  Camera,
+  Copy,
+  Link2,
+  Scissors,
+  Trash2,
+  Unlink
+} from '@/components/icons/PaperIcons'
+>>>>>>> 4e211e1 (refactor(icons): substitui Lucide por ícones próprios)
 
 export function ContextMenu({
   onDuplicate,

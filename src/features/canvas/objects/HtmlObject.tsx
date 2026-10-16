@@ -1,5 +1,5 @@
 import type { CanvasItem } from '@/features/board/types'
-import { FileCode2 } from 'lucide-react'
+import { FileCode2 } from '@/components/icons/PaperIcons'
 
 export function HtmlObject({ item }: { item: CanvasItem }) {
   return (

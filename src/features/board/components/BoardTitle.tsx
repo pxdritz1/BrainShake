@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input'
-import { Shapes } from 'lucide-react'
+import { Shapes } from '@/components/icons/PaperIcons'
 
 export function BoardTitle({ name, onRename }: { name: string; onRename: (name: string) => void }) {
   return (

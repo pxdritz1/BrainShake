@@ -1,14 +1,14 @@
-import { Zap } from 'lucide-react'
+import { MindMap } from '@/components/icons/PaperIcons'
 
 export function EmptyState() {
   return (
     <div className="empty-state">
-      <div className="empty-icon">
-        <Zap size={28} />
+      <div className="empty-illustration" aria-hidden="true">
+        <MindMap size={58} />
       </div>
-      <h1>A place to think out loud</h1>
+      <h1>Set a thought in motion</h1>
       <p>
-        Drop files here, create a note, draw, or connect ideas. Your board is saved automatically on
+        Drop a reference, add a note, sketch a line between ideas. This board saves automatically on
         this device.
       </p>
     </div>

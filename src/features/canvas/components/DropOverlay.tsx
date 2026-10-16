@@ -1,4 +1,4 @@
-import { Upload } from 'lucide-react'
+import { Upload } from '@/components/icons/PaperIcons'
 
 export function DropOverlay() {
   return (

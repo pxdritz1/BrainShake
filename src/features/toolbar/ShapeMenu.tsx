@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { Shapes } from 'lucide-react'
+import { Shapes } from '@/components/icons/PaperIcons'
 import { SHAPES } from '@/features/board/lib/constants'
 
 export function ShapeMenu({

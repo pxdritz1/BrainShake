@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { PencilLine } from 'lucide-react'
+import { PencilLine } from '@/components/icons/PaperIcons'
 import { STROKE_WIDTHS } from '@/features/board/lib/constants'
 
 export function StrokeMenu({

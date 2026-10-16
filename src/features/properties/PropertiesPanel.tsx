@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import type { BoardPatch, BoardItem } from '@/features/board/types'
-import { PanelRight, X } from 'lucide-react'
+import { PanelRight, X } from '@/components/icons/PaperIcons'
 import { ObjectProperties } from './ObjectProperties'
 import type { CSSProperties } from 'react'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
