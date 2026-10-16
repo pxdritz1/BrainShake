@@ -1,7 +1,17 @@
 import { Button } from '@/components/ui/button'
 import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import type { useImportExport } from '@/features/import-export/hooks/useImportExport'
+<<<<<<< HEAD
 import { LayoutGrid, Link2, Menu, Plus, SlidersHorizontal, Upload, X } from 'lucide-react'
+=======
+import {
+  BoxSelect,
+  ChevronLeft,
+  Link2,
+  SlidersHorizontal,
+  Upload
+} from '@/components/icons/PaperIcons'
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
 import { BoardList } from '@/features/board/components/BoardList'
 import { SidebarFooter } from './SidebarFooter'
 import { SidebarSettings } from './SidebarSettings'
@@ -34,7 +44,9 @@ export function Sidebar({
   onImportFiles,
   autoHide,
   preferences,
-  onOpenTour
+  onOpenTour,
+  expanded,
+  onExpandedChange
 }: {
   editor: ReturnType<typeof useBoardEditor>
   transfer: ReturnType<typeof useImportExport>
@@ -43,9 +55,10 @@ export function Sidebar({
   autoHide: boolean
   preferences: ReturnType<typeof usePreferences>
   onOpenTour: () => void
+  expanded: boolean
+  onExpandedChange: (expanded: boolean) => void
 }) {
   const [page, setPage] = useState<'workspace' | 'customize'>('workspace')
-  const [expanded, setExpanded] = useState(false)
   const [width, setWidth] = useLocalStorage(STORAGE_KEYS.sidebarWidth, DEFAULT_SIDEBAR_WIDTH)
   const savedWidth = Math.min(
     MAX_SIDEBAR_WIDTH,
@@ -58,31 +71,25 @@ export function Sidebar({
   useEffect(() => {
     if (!expanded) return
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setExpanded(false)
+      if (event.key === 'Escape') onExpandedChange(false)
     }
     window.addEventListener('keydown', closeOnEscape)
     return () => window.removeEventListener('keydown', closeOnEscape)
-  }, [expanded])
+  }, [expanded, onExpandedChange])
 
   return (
     <>
       {expanded && (
-        <div className="sidebar-backdrop" onClick={() => setExpanded(false)} aria-hidden="true" />
+        <div
+          className="sidebar-backdrop"
+          onClick={() => onExpandedChange(false)}
+          aria-hidden="true"
+        />
       )}
       <aside
         className={`sidebar ${autoHide ? 'sidebar-auto-hide' : ''} ${expanded ? 'sidebar-expanded' : ''}`}
         style={{ '--sidebar-width': `${savedWidth}px` } as CSSProperties}
       >
-        <Button
-          variant="ghost"
-          className="sidebar-mobile-toggle"
-          title={expanded ? 'Close sidebar' : 'Open sidebar'}
-          aria-label={expanded ? 'Close sidebar' : 'Open sidebar'}
-          aria-expanded={expanded}
-          onClick={() => setExpanded((current) => !current)}
-        >
-          {expanded ? <X size={18} /> : <Menu size={18} />}
-        </Button>
         <div
           className="sidebar-resize-handle"
           role="separator"
@@ -111,9 +118,10 @@ export function Sidebar({
             }
           }}
         />
-        <div className="sidebar-tabs" role="tablist" aria-label="Sidebar pages">
+        <div className="sidebar-tabs">
           <Button
             variant="ghost"
+<<<<<<< HEAD
             className={`sidebar-tab ${page === 'workspace' ? 'active' : ''}`}
             role="tab"
             aria-selected={page === 'workspace'}
@@ -137,10 +145,23 @@ export function Sidebar({
             }}
           >
             <SlidersHorizontal size={15} /> <span>Customize</span>
+=======
+            className="sidebar-tab"
+            title={
+              page === 'workspace' ? 'Customize appearance and accessibility' : 'Return to canvas'
+            }
+            onClick={() => {
+              setPage((current) => (current === 'workspace' ? 'customize' : 'workspace'))
+            }}
+          >
+            {page === 'workspace' ? <SlidersHorizontal size={15} /> : <ChevronLeft size={15} />}
+            <span>{page === 'workspace' ? 'Customize' : 'Back to canvas'}</span>
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
           </Button>
         </div>
         {page === 'workspace' ? (
           <>
+<<<<<<< HEAD
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -172,16 +193,55 @@ export function Sidebar({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+=======
+            <div className="sidebar-section">
+              <div className="section-label">Canvas</div>
+              <Button
+                variant="ghost"
+                className="nav-item active"
+                onClick={() => onExpandedChange(false)}
+              >
+                <BoxSelect size={16} />
+                <span>Canvas</span>
+              </Button>
+              <Button
+                variant="ghost"
+                className="nav-item"
+                onClick={() => {
+                  onExpandedChange(false)
+                  onImportFiles()
+                }}
+              >
+                <Upload size={16} />
+                <span>Import</span>
+              </Button>
+              <Button
+                variant="ghost"
+                className="nav-item"
+                onClick={() => {
+                  onExpandedChange(false)
+                  transfer.openUrlDialog()
+                }}
+              >
+                <Link2 size={16} />
+                <span>Import image URL</span>
+              </Button>
+              <ExportMenu
+                onExport={transfer.exportAsBrainshake}
+                onExportJson={transfer.exportAsJson}
+              />
+            </div>
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
             <BoardList
               boards={editor.boards}
               activeId={editor.board.id}
               onCreate={() => {
                 editor.createBoard()
-                setExpanded(false)
+                onExpandedChange(false)
               }}
               onSwitch={(id) => {
                 editor.switchBoard(id)
-                setExpanded(false)
+                onExpandedChange(false)
               }}
               onDelete={editor.deleteBoard}
               onToggleLink={editor.toggleBoardLink}

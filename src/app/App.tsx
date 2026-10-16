@@ -48,6 +48,7 @@ export default function App() {
   })
   const snapshots = useSnapshots({ editor, showToast })
   const transfer = useImportExport({ editor, snapshots, showToast })
+<<<<<<< HEAD
   const { board, selected } = editor
   const selectionKey = selected.join('|')
   const [panelState, setPanelState] = useState<{ selectionKey: string; hidden: boolean } | null>(
@@ -60,11 +61,16 @@ export default function App() {
     [selectionKey]
   )
   const togglePanel = () => setPanelState({ selectionKey, hidden: showPanel })
+=======
+  const [showPanel, setShowPanel] = useState(() => !window.matchMedia('(max-width: 820px)').matches)
+  const [sidebarExpanded, setSidebarExpanded] = useState(false)
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
   const [tourOpen, setTourOpen] = useState(false)
   const [presentationOpen, setPresentationOpen] = useState(false)
   const [presentationItemId, setPresentationItemId] = useState<string | null>(null)
 
   useEffect(() => {
+<<<<<<< HEAD
     const mobileQuery = window.matchMedia('(max-width: 720px)')
     const closePanelOnMobile = (event: MediaQueryListEvent) => {
       if (event.matches) closePanel()
@@ -72,6 +78,16 @@ export default function App() {
     mobileQuery.addEventListener('change', closePanelOnMobile)
     return () => mobileQuery.removeEventListener('change', closePanelOnMobile)
   }, [closePanel])
+=======
+    const mobileQuery = window.matchMedia('(max-width: 820px)')
+    const syncMobileLayout = (event: MediaQueryListEvent) => {
+      if (event.matches) setShowPanel(false)
+      setSidebarExpanded(false)
+    }
+    mobileQuery.addEventListener('change', syncMobileLayout)
+    return () => mobileQuery.removeEventListener('change', syncMobileLayout)
+  }, [])
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
 
   const fileRef = useRef<HTMLInputElement>(null)
   const boardFileRef = useRef<HTMLInputElement>(null)
@@ -141,7 +157,7 @@ export default function App() {
             '--font-scale': fontScale,
             '--header-custom': preferences.headerColor || 'var(--paper)',
             '--sidebar-custom': preferences.sidebarColor || 'var(--paper)',
-            '--canvas-custom': preferences.canvasColor || 'var(--surface)',
+            '--canvas-custom': preferences.canvasColor || 'var(--paper)',
             '--panel-custom': preferences.panelColor || 'var(--paper)',
             '--focus-color': preferences.focusColor
           } as React.CSSProperties
@@ -156,7 +172,13 @@ export default function App() {
           editor={editor}
           transfer={transfer}
           onImportBoard={() => boardFileRef.current?.click()}
+<<<<<<< HEAD
           onToggleSettings={togglePanel}
+=======
+          onToggleSettings={() => setShowPanel((value) => !value)}
+          onToggleSidebar={() => setSidebarExpanded((value) => !value)}
+          sidebarExpanded={sidebarExpanded}
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
           onOpenTour={() => setTourOpen(true)}
           onOpenPresentation={() => setPresentationOpen(true)}
         />
@@ -168,6 +190,8 @@ export default function App() {
           autoHide={preferences.sidebarAutoHide}
           preferences={preferences}
           onOpenTour={() => setTourOpen(true)}
+          expanded={sidebarExpanded}
+          onExpandedChange={setSidebarExpanded}
         />
         <main className="workspace">
           <Canvas

@@ -1,7 +1,11 @@
 import { Button } from '@/components/ui/button'
 import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import type { useImportExport } from '@/features/import-export/hooks/useImportExport'
+<<<<<<< HEAD
 import { MoreHorizontal, PanelRight, Presentation, Upload } from 'lucide-react'
+=======
+import { Menu, Presentation, Settings2, Upload, X } from '@/components/icons/PaperIcons'
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
 import { BalloonIcon } from '@/components/icons/BalloonIcon'
 import { BoardTitle } from '@/features/board/components/BoardTitle'
 import { ExportMenu } from '@/features/import-export/components/ExportMenu'
@@ -17,6 +21,8 @@ export function Topbar({
   transfer,
   onImportBoard,
   onToggleSettings,
+  onToggleSidebar,
+  sidebarExpanded,
   onOpenTour,
   onOpenPresentation
 }: {
@@ -24,15 +30,30 @@ export function Topbar({
   transfer: ReturnType<typeof useImportExport>
   onImportBoard: () => void
   onToggleSettings: () => void
+  onToggleSidebar: () => void
+  sidebarExpanded: boolean
   onOpenTour: () => void
   onOpenPresentation: () => void
 }) {
   return (
     <header className="topbar">
       <div className="brand">
-        <img className="brand-logo" src={`${import.meta.env.BASE_URL}logo.png`} alt="BrainShake" />
+        <Button
+          variant="ghost"
+          className="mobile-sidebar-trigger"
+          title={sidebarExpanded ? 'Close navigation' : 'Open navigation'}
+          aria-label={sidebarExpanded ? 'Close navigation' : 'Open navigation'}
+          aria-expanded={sidebarExpanded}
+          onClick={onToggleSidebar}
+        >
+          {sidebarExpanded ? <X size={18} /> : <Menu size={18} />}
+        </Button>
+        <img
+          className="brand-logo"
+          src={`${import.meta.env.BASE_URL}brainshake-stamp.svg`}
+          alt="BrainShake"
+        />
         <span className="brand-name">BrainShake</span>
-        <span className="brand-sub">workspace</span>
       </div>
       <BoardTitle name={editor.board.name} onRename={editor.renameBoard} />
       <div className="top-actions">

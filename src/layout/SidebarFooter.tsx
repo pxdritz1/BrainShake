@@ -3,7 +3,10 @@ import { GithubIcon } from '@/components/icons/GithubIcon'
 
 export function SidebarFooter() {
   return (
+<<<<<<< HEAD
     <div className="sidebar-foot">
+=======
+>>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
       <div className="sidebar-links">
         <a
           className="sidebar-link"
@@ -26,6 +29,5 @@ export function SidebarFooter() {
           <span>Ko-fi</span>
         </a>
       </div>
-    </div>
   )
 }

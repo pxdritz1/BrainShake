@@ -23,7 +23,6 @@
     "dompurify": "^3.4.15",
     "html-to-image": "^1.11.13",
     "jszip": "^3.10.2",
-    "lucide-react": "^1.47.0",
     "marked": "^18.0.13",
     "motion": "^13.4.0",
     "radix-ui": "^1.6.7",
