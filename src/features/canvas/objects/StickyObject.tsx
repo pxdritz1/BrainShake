@@ -13,10 +13,11 @@ export function StickyObject({
     <div
       className={`widget-body sticky ${item.color || 'yellow'}`}
       style={{
-        background:
+        backgroundColor:
           item.fillColor || (STICKY_COLORS as Record<string, string>)[item.color || 'yellow']
       }}
     >
+      <span className="sticky-tape" aria-hidden="true" />
       <h3>{item.title || 'Note'}</h3>
       <MarkdownEditor
         item={item}

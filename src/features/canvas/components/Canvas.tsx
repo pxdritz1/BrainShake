@@ -5,8 +5,12 @@ import { isCanvasItem } from '@/features/board/types'
 import type { BoardPatch, CanvasItem } from '@/features/board/types'
 import { getStrokeBounds, getStrokeGroups } from '@/features/board/lib/objects'
 import { ContextMenu as ShadcnContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
+<<<<<<< HEAD
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import type React from 'react'
+=======
+import { useState, type CSSProperties } from 'react'
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 import { CanvasObject } from '../objects/CanvasObject'
 import { ConnectorLayer } from './ConnectorLayer'
 import { DraftStroke } from './DraftStroke'
@@ -80,7 +84,18 @@ export function Canvas({
       <ContextMenuTrigger asChild>
         <div
           ref={canvasRef}
+<<<<<<< HEAD
           className={`canvas-shell ${grid ? '' : 'grid-off'} ${editor.tool === 'eraser' ? 'tool-eraser' : ''} ${pointer.isErasing ? 'is-erasing' : ''} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
+=======
+          className={`canvas-shell ${grid ? '' : 'grid-off'} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
+          style={
+            {
+              '--canvas-pan-x': `${pan.x}px`,
+              '--canvas-pan-y': `${pan.y}px`,
+              '--canvas-zoom': zoom
+            } as CSSProperties
+          }
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
           onWheel={presenting ? undefined : onWheel}
           onPointerDownCapture={
             presenting

@@ -8,7 +8,7 @@ import {
   Square,
   Star,
   Triangle
-} from 'lucide-react'
+} from '@/components/icons/PaperIcons'
 import type { CanvasItem } from '../types'
 
 export const seedObjects: CanvasItem[] = [
@@ -35,13 +35,14 @@ export const seedObjects: CanvasItem[] = [
 ]
 
 export const STICKY_COLORS = {
-  yellow: '#fff0ad',
-  pink: '#ffd9d1',
-  blue: '#cfe9eb',
-  green: '#d8ebc9',
-  white: '#ffffff'
+  yellow: '#eee1b9',
+  pink: '#ead2ca',
+  blue: '#cadce1',
+  green: '#d5dfca',
+  white: '#fffdf7'
 }
 
+<<<<<<< HEAD
 export const ACCENTS = [
   '#a8c9f0',
   '#a9ddb2',
@@ -54,6 +55,9 @@ export const ACCENTS = [
   '#a9dff0',
   '#f3df8d'
 ]
+=======
+export const ACCENTS = ['#a85032', '#536b78', '#68745c', '#9a7353', '#786568', '#343b39']
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 
 export const THEMES = [
   { id: 'light', label: 'Light' },

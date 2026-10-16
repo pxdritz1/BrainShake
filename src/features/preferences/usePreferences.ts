@@ -5,11 +5,16 @@ import { loadDockPosition } from './dockPosition'
 
 export function usePreferences() {
   const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.theme, 'light')
+<<<<<<< HEAD
   const [accent, setAccent] = useLocalStorage(STORAGE_KEYS.accent, '#0a84ff')
   const [dockPosition, setDockPosition] = useState(() => loadDockPosition(localStorage))
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.dock, JSON.stringify(dockPosition))
   }, [dockPosition])
+=======
+  const [accent, setAccent] = useLocalStorage(STORAGE_KEYS.accent, '#a85032')
+  const [dockPosition, setDockPosition] = useLocalStorage(STORAGE_KEYS.dock, 'bottom')
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   const [fontSize, setFontSize] = useLocalStorage(STORAGE_KEYS.fontSize, 'default')
   const [highContrast, setHighContrast] = useLocalStorage(STORAGE_KEYS.highContrast, false)
   const [reduceMotion, setReduceMotion] = useLocalStorage(STORAGE_KEYS.reduceMotion, false)
@@ -18,7 +23,11 @@ export function usePreferences() {
     true
   )
   const [enhancedFocus, setEnhancedFocus] = useLocalStorage(STORAGE_KEYS.enhancedFocus, true)
+<<<<<<< HEAD
   const [focusColor, setFocusColor] = useLocalStorage(STORAGE_KEYS.focusColor, '#0a84ff')
+=======
+  const [focusColor, setFocusColor] = useLocalStorage(STORAGE_KEYS.focusColor, '#a85032')
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   const [tutorialCompleted, setTutorialCompleted] = useLocalStorage(
     STORAGE_KEYS.tutorialCompleted,
     false

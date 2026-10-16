@@ -31,7 +31,12 @@
 .markdown-content h3,
 .markdown-content h4 {
   margin: 0 0 8px;
+<<<<<<< HEAD
   font-family: inherit;
+=======
+  font-family: var(--font-editorial, Georgia, serif);
+  font-weight: 600;
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   line-height: 1.2;
 }
 .markdown-content h1 {
@@ -64,15 +69,15 @@
 }
 .markdown-content code {
   padding: 2px 4px;
-  border-radius: 4px;
-  background: rgba(36, 42, 40, 0.09);
+  border-radius: 2px;
+  background: rgba(61, 53, 41, 0.08);
   font-size: 0.9em;
 }
 .markdown-content pre {
   padding: 9px;
   overflow: auto;
-  border-radius: 7px;
-  background: rgba(36, 42, 40, 0.09);
+  border-radius: 3px;
+  background: rgba(61, 53, 41, 0.08);
 }
 .markdown-content pre code {
   padding: 0;

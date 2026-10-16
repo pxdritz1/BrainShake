@@ -1,13 +1,22 @@
 .canvas-shell {
   position: absolute;
-  inset: 0;
+  inset: 12px;
   overflow: hidden;
+<<<<<<< HEAD
   background-color: var(--canvas-custom, #f5f5f7);
   background-image: radial-gradient(
     color-mix(in srgb, var(--line, #cdd5ce) 55%, transparent) 1px,
     transparent 1px
   );
   background-size: 24px 24px;
+=======
+  border: 1px solid rgba(79, 67, 49, 0.22);
+  background-color: var(--canvas-custom, var(--paper));
+  background-image: radial-gradient(rgba(83, 107, 120, 0.17) 0.8px, transparent 0.9px);
+  background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
+  background-position: var(--canvas-pan-x, 0px) var(--canvas-pan-y, 0px);
+  background-repeat: repeat;
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .canvas-shell {
   touch-action: none;
@@ -70,15 +79,7 @@
   pointer-events: none;
 }
 .canvas-shell.grid-off {
-  background-image: none !important;
-}
-.canvas-shell.is-presenting::before {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  content: '';
-  background: rgba(15, 18, 17, 0.34);
+  background-image: none;
 }
 .canvas-world {
   position: absolute;
@@ -89,6 +90,14 @@
 }
 .canvas-shell.is-presenting .canvas-world {
   pointer-events: none;
+}
+.canvas-shell.is-presenting::before {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  content: '';
+  background: rgba(15, 18, 17, 0.34);
 }
 .canvas-shell.is-presenting .canvas-object:not(.is-presenting-active) {
   filter: brightness(0.56) saturate(0.7);
@@ -119,9 +128,17 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+<<<<<<< HEAD
   border: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
   border-radius: 14px;
   box-shadow: 0 7px 18px rgba(29, 29, 31, 0.08);
+=======
+  border: 1px solid rgba(59, 54, 44, 0.2);
+  border-radius: 3px;
+  box-shadow:
+    1px 2px 0 rgba(61, 53, 41, 0.08),
+    0 5px 13px rgba(49, 43, 34, 0.1);
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .widget-titlebar {
   display: flex;
@@ -130,8 +147,9 @@
   flex: 0 0 27px;
   min-height: 27px;
   padding: 0 6px 0 10px;
-  color: white;
-  background: var(--primary);
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--primary) 15%, var(--paper));
   cursor: grab;
   font-size: 11px;
   font-weight: 600;
@@ -149,12 +167,12 @@
   place-items: center;
   width: 20px;
   height: 20px;
-  color: white;
+  color: var(--ink);
   background: transparent;
   border-radius: 4px;
 }
 .widget-titlebar button:hover {
-  background: rgba(0, 0, 0, 0.18);
+  background: var(--primary-soft);
 }
 .widget-body {
   flex: 1;
@@ -172,82 +190,134 @@
 }
 .resize-handle {
   position: absolute;
-  width: 13px;
-  height: 13px;
-  border: 2px solid white;
-  border-radius: 4px;
-  background: var(--primary);
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
   z-index: 4;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  touch-action: none;
+  pointer-events: auto;
+}
+.resize-handle::after {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid white;
+  border-radius: 2px;
+  background: var(--primary);
+  content: '';
+  pointer-events: none;
 }
 .resize-nw {
-  top: -7px;
-  left: -7px;
+  top: -12px;
+  left: -12px;
   cursor: nwse-resize;
 }
 .resize-n {
-  top: -7px;
+  top: -12px;
   left: 50%;
   transform: translateX(-50%);
   cursor: ns-resize;
 }
 .resize-ne {
-  top: -7px;
-  right: -7px;
+  top: -12px;
+  right: -12px;
   cursor: nesw-resize;
 }
 .resize-e {
   top: 50%;
-  right: -7px;
+  right: -12px;
   transform: translateY(-50%);
   cursor: ew-resize;
 }
 .resize-se {
-  right: -7px;
-  bottom: -7px;
+  right: -12px;
+  bottom: -12px;
   cursor: nwse-resize;
 }
 .resize-s {
-  bottom: -7px;
+  bottom: -12px;
   left: 50%;
   transform: translateX(-50%);
   cursor: ns-resize;
 }
 .resize-sw {
-  bottom: -7px;
-  left: -7px;
+  bottom: -12px;
+  left: -12px;
   cursor: nesw-resize;
 }
 .resize-w {
   top: 50%;
-  left: -7px;
+  left: -12px;
   transform: translateY(-50%);
   cursor: ew-resize;
 }
 .sticky {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
   padding: 19px;
   color: #443c2d;
-  background: #fff0ad;
+  background-color: #eee1b9;
+  background-image: var(--paper-grain);
+  background-size: 192px 192px;
+  border: 1px solid rgba(73, 63, 47, 0.2);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    1px 3px 0 rgba(55, 47, 35, 0.1),
+    0 8px 16px rgba(55, 47, 35, 0.09);
+}
+.sticky::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 19px;
+  height: 19px;
+  background: linear-gradient(
+    135deg,
+    transparent 47%,
+    rgba(68, 56, 38, 0.11) 49% 54%,
+    rgba(255, 255, 255, 0.34) 56%
+  );
+  content: '';
+  pointer-events: none;
+}
+.sticky-tape {
+  position: absolute;
+  top: 4px;
+  left: calc(50% - 24px);
+  width: 48px;
+  height: 12px;
+  border: 1px solid rgba(76, 91, 99, 0.16);
+  background: repeating-linear-gradient(
+    125deg,
+    rgba(190, 204, 203, 0.55) 0 5px,
+    rgba(224, 230, 220, 0.62) 5px 9px
+  );
+  transform: rotate(-2deg);
+  pointer-events: none;
 }
 .sticky.pink {
-  background: #ffd9d1;
+  background-color: #ead2ca;
 }
 .sticky.blue {
-  background: #cfe9eb;
+  background-color: #cadce1;
 }
 .sticky.green {
-  background: #d8ebc9;
+  background-color: #d5dfca;
 }
 .sticky h3 {
   flex: 0 0 auto;
   min-width: 0;
   overflow: hidden;
   margin: 0 0 11px;
+<<<<<<< HEAD
   font-family: inherit;
+=======
+  font-family: var(--font-editorial, Georgia, serif);
+>>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   font-size: 15px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -277,7 +347,16 @@
   min-width: 0;
   min-height: 0;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.94);
+  background-color: var(--paper);
+  background-image: var(--paper-grain);
+  background-size: 192px 192px;
+  box-shadow: var(--paper-lift), var(--shadow);
+}
+
+@media (max-width: 720px) {
+  .canvas-shell {
+    inset: 5px;
+  }
 }
 .text-card textarea {
   flex: 1 1 auto;
@@ -353,10 +432,10 @@
   max-width: min(430px, 90vw);
   padding: 5px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--paper) 94%, transparent);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(12px);
+  border-radius: 3px;
+  background-color: var(--paper);
+  background-image: var(--paper-grain);
+  background-size: 192px 192px;
 }
 .text-object .text-format-tooltip {
   font-family: inherit;
@@ -404,23 +483,38 @@
 .image-card,
 .video-card,
 .html-card {
-  background: #fff;
+  background-color: var(--paper);
+  background-image: var(--paper-grain);
+  background-size: 192px 192px;
+}
+.image-card {
+  padding: 7px;
+  background-color: #e5dece;
 }
 .image-card img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   pointer-events: none;
+  border: 1px solid rgba(56, 49, 39, 0.18);
+  background: var(--paper);
+  box-shadow: 0 1px 3px rgba(45, 39, 30, 0.12);
+}
+.video-card {
+  padding: 6px;
+  background-color: #e1d9ca;
 }
 .video-card video {
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: #1d2521;
+  border: 1px solid rgba(56, 49, 39, 0.22);
 }
 .html-card {
   display: flex;
   flex-direction: column;
+  background-color: #f7f2e8;
 }
 .html-label {
   padding: 8px 11px;
@@ -503,12 +597,22 @@
   overflow: visible;
   pointer-events: none;
 }
-.connector line {
-  stroke: #7d9185;
-  stroke-width: 2;
+.connector path {
+  fill: none;
+  stroke: var(--stroke-color, #536b78);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 10 0.35 18 0.2;
 }
 .connector polygon {
-  fill: #7d9185;
+  fill: var(--stroke-color, #536b78);
+  stroke: var(--paper);
+  stroke-width: 0.8;
+}
+.connector circle {
+  fill: var(--paper);
+  stroke: var(--stroke-color, #536b78);
+  stroke-width: 1.4;
 }
 .shape-card {
   display: grid;
@@ -544,6 +648,9 @@
 }
 .shape-card.fill-outline {
   background: transparent;
+}
+.theme-oled .floating-panel {
+  background: #000;
 }
 @media (hover: none) {
   .canvas-object:hover {
