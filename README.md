@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://pxdritz1.github.io/BrainShake/"><img src="public/logo-transparent.png" alt="BrainShake logo" width="180"></a>
+<a href="https://pxdritz1.github.io/BrainShake/"><img src="public/brainshake-stamp.svg" alt="BrainShake logo" width="180"></a>
 
 # [BrainShake](https://pxdritz1.github.io/BrainShake/)
 
@@ -17,6 +17,7 @@ Create notes, connect thoughts, draw freely, and bring assets into one focused w
 
 [![Ko-fi support](https://cdn.modrinth.com/data/cached_images/c4c994ca06f3bc6bbcfdc5f6b98d4af42e397033.png)](https://ko-fi.com/pxdritz1)
 
+<<<<<<< HEAD
 ## See it in action
 
 BrainShake includes multiples visual themes. The board stays dense and practical while the canvas remains yours to shape.
@@ -29,6 +30,8 @@ BrainShake includes multiples visual themes. The board stays dense and practical
 | --- | --- | --- |
 | ![BrainShake warm theme](screenshots/warm.png) | ![BrainShake mint theme](screenshots/mint.png) | ![BrainShake OLED theme](screenshots/OLED.png) |
 
+=======
+>>>>>>> 4fd6d39 (docs(readme): atualiza apresentação do projeto)
 ## Highlights
 
 - Infinite-feeling canvas with scroll zoom, middle-button drag pan, grid controls, multi-selection, movement, and resizing
