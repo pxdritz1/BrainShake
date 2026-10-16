@@ -1,16 +1,11 @@
 import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import type { useViewport } from '@/features/canvas/hooks/useViewport'
 import type { useCanvasPointer } from '@/features/canvas/hooks/useCanvasPointer'
+import type { BoardPatch } from '@/features/board/types'
 import { isCanvasItem } from '@/features/board/types'
-import type { BoardPatch, CanvasItem } from '@/features/board/types'
 import { getStrokeBounds, getStrokeGroups } from '@/features/board/lib/objects'
 import { ContextMenu as ShadcnContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
-<<<<<<< HEAD
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import type React from 'react'
-=======
 import { useState, type CSSProperties } from 'react'
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 import { CanvasObject } from '../objects/CanvasObject'
 import { ConnectorLayer } from './ConnectorLayer'
 import { DraftStroke } from './DraftStroke'
@@ -38,43 +33,6 @@ export function Canvas({
   presentingItemId: string | null
 }) {
   const [dropActive, setDropActive] = useState(false)
-  const handlers = useRef({
-    selectObject: pointer.selectObject,
-    beginDrag: pointer.beginDrag,
-    beginResize: pointer.beginResize,
-    updateObject: editor.updateObject,
-    removeObject: editor.removeObject
-  })
-  useLayoutEffect(() => {
-    handlers.current = {
-      selectObject: pointer.selectObject,
-      beginDrag: pointer.beginDrag,
-      beginResize: pointer.beginResize,
-      updateObject: editor.updateObject,
-      removeObject: editor.removeObject
-    }
-  })
-  const selectObject = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>, item: CanvasItem) =>
-      handlers.current.selectObject(event, item),
-    [handlers]
-  )
-  const beginDrag = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>, item: CanvasItem) =>
-      handlers.current.beginDrag(event, item),
-    [handlers]
-  )
-  const beginResize = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>, item: CanvasItem) =>
-      handlers.current.beginResize(event, item),
-    [handlers]
-  )
-  const updateObject = useCallback(
-    (id: string, patch: BoardPatch, saveHistory?: boolean) =>
-      handlers.current.updateObject(id, patch, saveHistory),
-    [handlers]
-  )
-  const removeObject = useCallback((id: string) => handlers.current.removeObject(id), [handlers])
   const { board, selected, strokeWidth } = editor
   const { canvasRef, onWheel, zoom, pan } = viewport
   const contentObjects = board.objects.filter(isCanvasItem)
@@ -84,9 +42,6 @@ export function Canvas({
       <ContextMenuTrigger asChild>
         <div
           ref={canvasRef}
-<<<<<<< HEAD
-          className={`canvas-shell ${grid ? '' : 'grid-off'} ${editor.tool === 'eraser' ? 'tool-eraser' : ''} ${pointer.isErasing ? 'is-erasing' : ''} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
-=======
           className={`canvas-shell ${grid ? '' : 'grid-off'} ${pointer.isPanning ? 'is-panning' : ''} ${presenting ? 'is-presenting' : ''}`}
           style={
             {
@@ -95,49 +50,25 @@ export function Canvas({
               '--canvas-zoom': zoom
             } as CSSProperties
           }
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
           onWheel={presenting ? undefined : onWheel}
-          onPointerDownCapture={
-            presenting
-              ? undefined
-              : (event) => {
-                  pointer.onTouchPointerDown(event)
-                  if (event.defaultPrevented || editor.tool !== 'eraser') return
-                  event.preventDefault()
-                  event.stopPropagation()
-                  pointer.beginErase(event)
-                  if (event.button === 1) pointer.beginPan(event)
-                }
-          }
           onPointerDown={
             presenting
               ? undefined
               : (event) => {
                   if (event.target !== event.currentTarget) {
                     const target = event.target
-                    // A note's rendered text is a button that opens the editor; with the
-                    // pen it is just a surface to draw on, e.g. an arrow to another note.
                     const isInteractiveTarget =
                       target instanceof Element &&
-                      target.closest(
-                        'button:not(.markdown-preview), input, textarea, select, [contenteditable="true"]'
-                      )
+                      target.closest('button, input, textarea, select, [contenteditable="true"]')
                     if (editor.tool === 'pen' && !isInteractiveTarget) pointer.beginDrawing(event)
                     return
                   }
                   pointer.onPointerDown(event)
                 }
           }
-          onPointerMoveCapture={(event) => {
-            pointer.moveEraserCursor(event)
-            pointer.onTouchPointerMove(event)
-          }}
           onPointerMove={pointer.onPointerMove}
-          onPointerUpCapture={pointer.onTouchPointerUp}
           onPointerUp={pointer.onPointerUp}
-          onPointerCancelCapture={pointer.onTouchPointerUp}
           onPointerCancel={pointer.onPointerUp}
-          onPointerLeave={pointer.hideEraserCursor}
           onDragOver={(event) => {
             event.preventDefault()
             setDropActive(true)
@@ -149,28 +80,15 @@ export function Canvas({
             onImportFiles(event.dataTransfer.files)
           }}
         >
-          {editor.tool === 'eraser' && pointer.eraserCursor && (
-            <div
-              className={`eraser-cursor ${pointer.isErasing ? 'is-active' : ''}`}
-              style={{
-                left: pointer.eraserCursor.x,
-                top: pointer.eraserCursor.y,
-                width: editor.eraserWidth,
-                height: editor.eraserWidth
-              }}
-              aria-hidden="true"
-            />
-          )}
           <div
             className="canvas-world"
             style={{
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-              transition:
-                pointer.isPanning || pointer.isPinching
-                  ? 'none'
-                  : presenting
-                    ? 'transform 460ms cubic-bezier(.2,.75,.25,1)'
-                    : 'transform 140ms cubic-bezier(.2,.75,.25,1)'
+              transition: pointer.isPanning
+                ? 'none'
+                : presenting
+                  ? 'transform 460ms cubic-bezier(.2,.75,.25,1)'
+                  : 'transform 140ms cubic-bezier(.2,.75,.25,1)'
             }}
           >
             <ConnectorLayer objects={board.objects} />
@@ -208,16 +126,11 @@ export function Canvas({
                 selected={selected.includes(item.id)}
                 activeTool={editor.tool}
                 presentingActive={presenting && item.id === presentingItemId}
-                gesture={
-                  pointer.drawing?.gesture?.ids.includes(item.id)
-                    ? pointer.drawing.gesture.type
-                    : undefined
-                }
-                onSelect={selectObject}
-                onDrag={beginDrag}
-                onResize={beginResize}
-                onChange={updateObject}
-                onRemove={removeObject}
+                onSelect={pointer.selectObject}
+                onDrag={pointer.beginDrag}
+                onResize={pointer.beginResize}
+                onChange={(id: string, patch: BoardPatch) => editor.updateObject(id, patch, false)}
+                onRemove={editor.removeObject}
               />
             ))}
             {pointer.drawing && <DraftStroke drawing={pointer.drawing} strokeWidth={strokeWidth} />}
@@ -235,6 +148,7 @@ export function Canvas({
           onLink={() => editor.setTool('connector')}
           onUnlink={editor.unlinkSelection}
           canUnlink={selected.length >= 2}
+          onCut={editor.cutSelection}
           onScreenshot={onScreenshot}
           canEdit={selected.length > 0}
         />

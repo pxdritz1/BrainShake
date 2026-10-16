@@ -1,9 +1,6 @@
 import { Button } from '@/components/ui/button'
 import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import type { useImportExport } from '@/features/import-export/hooks/useImportExport'
-<<<<<<< HEAD
-import { LayoutGrid, Link2, Menu, Plus, SlidersHorizontal, Upload, X } from 'lucide-react'
-=======
 import {
   BoxSelect,
   ChevronLeft,
@@ -11,8 +8,8 @@ import {
   SlidersHorizontal,
   Upload
 } from '@/components/icons/PaperIcons'
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
 import { BoardList } from '@/features/board/components/BoardList'
+import { ExportMenu } from '@/features/import-export/components/ExportMenu'
 import { SidebarFooter } from './SidebarFooter'
 import { SidebarSettings } from './SidebarSettings'
 import { useEffect, useState, type CSSProperties } from 'react'
@@ -21,17 +18,10 @@ import { SnapshotList } from '@/features/workspace/SnapshotList'
 import type { useSnapshots } from '@/features/workspace/useSnapshots'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { STORAGE_KEYS } from '@/features/board/lib/storage'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 
 const MIN_SIDEBAR_WIDTH = 220
 const MAX_SIDEBAR_WIDTH = 560
 const DEFAULT_SIDEBAR_WIDTH = 280
-const MOBILE_SIDEBAR_BREAKPOINT = 820
 
 function maxSidebarWidth() {
   return Math.max(MIN_SIDEBAR_WIDTH, Math.min(MAX_SIDEBAR_WIDTH, window.innerWidth - 320))
@@ -121,31 +111,6 @@ export function Sidebar({
         <div className="sidebar-tabs">
           <Button
             variant="ghost"
-<<<<<<< HEAD
-            className={`sidebar-tab ${page === 'workspace' ? 'active' : ''}`}
-            role="tab"
-            aria-selected={page === 'workspace'}
-            title="Workspace"
-            onClick={() => {
-              setPage('workspace')
-              if (window.innerWidth <= MOBILE_SIDEBAR_BREAKPOINT) setExpanded(true)
-            }}
-          >
-            <LayoutGrid size={15} /> <span>Workspace</span>
-          </Button>
-          <Button
-            variant="ghost"
-            className={`sidebar-tab ${page === 'customize' ? 'active' : ''}`}
-            role="tab"
-            aria-selected={page === 'customize'}
-            title="Customize"
-            onClick={() => {
-              setPage('customize')
-              if (window.innerWidth <= MOBILE_SIDEBAR_BREAKPOINT) setExpanded(true)
-            }}
-          >
-            <SlidersHorizontal size={15} /> <span>Customize</span>
-=======
             className="sidebar-tab"
             title={
               page === 'workspace' ? 'Customize appearance and accessibility' : 'Return to canvas'
@@ -156,44 +121,10 @@ export function Sidebar({
           >
             {page === 'workspace' ? <SlidersHorizontal size={15} /> : <ChevronLeft size={15} />}
             <span>{page === 'workspace' ? 'Customize' : 'Back to canvas'}</span>
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
           </Button>
         </div>
         {page === 'workspace' ? (
           <>
-<<<<<<< HEAD
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="workspace-add-button"
-                  title="Add to canvas"
-                  aria-label="Add to canvas"
-                >
-                  <Plus size={16} />
-                  <span>Add to canvas</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" sideOffset={8} className="workspace-actions-menu">
-                <DropdownMenuItem
-                  onSelect={() => {
-                    setExpanded(false)
-                    onImportFiles()
-                  }}
-                >
-                  <Upload size={15} /> Import files
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => {
-                    setExpanded(false)
-                    transfer.openUrlDialog()
-                  }}
-                >
-                  <Link2 size={15} /> Add image from URL
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-=======
             <div className="sidebar-section">
               <div className="section-label">Canvas</div>
               <Button
@@ -231,7 +162,6 @@ export function Sidebar({
                 onExportJson={transfer.exportAsJson}
               />
             </div>
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
             <BoardList
               boards={editor.boards}
               activeId={editor.board.id}

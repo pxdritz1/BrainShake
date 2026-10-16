@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-=======
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500..700&family=Newsreader:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
@@ -10,31 +6,6 @@
 @custom-variant dark (&:is(.theme-dark *, .theme-oled *));
 
 :root {
-<<<<<<< HEAD
-  font-family:
-    'Lexend',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
-  color: #1d1d1f;
-  background: #f5f5f7;
-  font-synthesis: none;
-  --ink: #1d1d1f;
-  --muted: #6e6e73;
-  --line: #d2d2d7;
-  --paper: #ffffff;
-  --surface: #f5f5f7;
-  --primary: #0a84ff;
-  --primary-soft: color-mix(in srgb, var(--primary) 14%, transparent);
-  --accent: #f0f0f2;
-  --control-active: #e8e8ed;
-  --green: #577d6a;
-  --stroke-color: #1d1d1f;
-  --shadow: 0 20px 50px rgba(29, 29, 31, 0.08);
-  --font-scale: 1;
-  --focus-ring: color-mix(in srgb, var(--focus-color, #0a84ff) 28%, transparent);
-=======
   font-family: 'DM Sans', sans-serif;
   color: #292d2b;
   background: #ebe6da;
@@ -57,7 +28,6 @@
   --font-editorial: 'Newsreader', Georgia, serif;
   --font-scale: 1;
   --focus-ring: color-mix(in srgb, var(--focus-color, #a85032) 30%, transparent);
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   --success-ink: #1a4f3d;
   --success-bg: rgba(87, 125, 106, 0.12);
   --warning-ink: #6d4d1b;
@@ -103,13 +73,9 @@ a:focus-visible,
 }
 .app {
   --accessibility-scale: var(--font-scale);
-<<<<<<< HEAD
-  font-size: calc(14px * var(--font-scale));
-=======
   font-size: calc(13px * var(--font-scale));
   background-image: var(--paper-grain);
   background-size: 256px 256px;
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .font-size-small {
   --font-scale: 0.92;
@@ -185,15 +151,6 @@ a:focus-visible,
   height: 38px;
   flex: 0 0 38px;
   object-fit: contain;
-<<<<<<< HEAD
-  border-radius: 8px;
-}
-.brand-name {
-  font-family: inherit;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-=======
   border-radius: 50%;
   transition: transform 0.2s ease;
 }
@@ -209,7 +166,6 @@ a:focus-visible,
   font-variation-settings:
     'SOFT' 35,
     'WONK' 1;
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .brand-sub {
   color: var(--muted);
@@ -812,7 +768,7 @@ a:focus-visible,
   width: var(--properties-panel-width, 300px);
   height: 400px;
   max-width: calc(100vw - 32px);
-  max-height: min(620px, calc(100% - 105px));
+  max-height: calc(100% - 42px);
   padding: 15px;
   border: 1px solid var(--line);
   border-radius: 3px;
@@ -865,15 +821,10 @@ a:focus-visible,
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-<<<<<<< HEAD
-  font-family: inherit;
-  font-size: 13px;
-=======
   padding-bottom: 9px;
   border-bottom: 1px solid var(--line);
   font-family: var(--font-editorial);
   font-size: 16px;
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   font-weight: 600;
 }
 .panel-row {
@@ -1016,11 +967,7 @@ a:focus-visible,
 .empty-state h1 {
   margin: 0 0 8px;
   color: var(--ink);
-<<<<<<< HEAD
-  font-family: inherit;
-=======
   font-family: var(--font-editorial);
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   font-size: 22px;
   font-weight: 500;
   letter-spacing: 0;
@@ -1111,31 +1058,6 @@ a:focus-visible,
   gap: 4px;
   color: var(--muted);
   font-size: 10px;
-}
-.toolbar-menu-panel.eraser-menu label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-}
-.eraser-size-range {
-  width: 100%;
-  accent-color: var(--primary);
-  cursor: ew-resize;
-}
-.stroke-menu-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 10px;
-}
-.stroke-menu-hint {
-  margin: 0;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
 }
 .toolbar-menu-panel [data-slot='dropdown-menu-item'] {
   display: flex;
@@ -1352,13 +1274,9 @@ a:focus-visible,
   background: rgba(255, 250, 242, 0.92);
 }
 .theme-warm .canvas-shell {
-<<<<<<< HEAD
-  background-color: #f8eee1;
-=======
   background-color: #eee7d8;
   background-image: radial-gradient(rgba(83, 107, 120, 0.17) 0.8px, transparent 0.9px);
   background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .theme-mint {
   --paper: #f4fffa;
@@ -1375,11 +1293,8 @@ a:focus-visible,
 }
 .theme-mint .canvas-shell {
   background-color: #e9f6ef;
-<<<<<<< HEAD
-=======
   background-image: radial-gradient(#bdd9c9 1px, transparent 1px);
   background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .theme-dark {
   --paper: #17191b;
@@ -1399,11 +1314,8 @@ a:focus-visible,
 }
 .theme-dark .canvas-shell {
   background-color: #14171a;
-<<<<<<< HEAD
-=======
   background-image: radial-gradient(#2c3138 1px, transparent 1px);
   background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .theme-dark .board-item:hover,
 .theme-dark .board-item.active,
@@ -1479,11 +1391,8 @@ a:focus-visible,
 }
 .theme-oled .canvas-shell {
   background-color: #000;
-<<<<<<< HEAD
-=======
   background-image: radial-gradient(#202020 1px, transparent 1px);
   background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .theme-oled .text-card,
 .theme-oled .image-card,
@@ -1513,15 +1422,6 @@ a:focus-visible,
 .theme-oled .sidebar-link:hover {
   background: var(--accent);
 }
-<<<<<<< HEAD
-.accessibility-settings,
-.drawing-settings {
-  display: grid;
-  gap: 12px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--line);
-=======
 .sidebar input:not([type='color']),
 .floating-panel input:not([type='color']),
 .floating-panel textarea,
@@ -1531,7 +1431,6 @@ a:focus-visible,
   border-color: var(--line);
   border-radius: 2px;
   background-color: var(--paper);
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .panel-section {
   display: grid;
@@ -1543,7 +1442,7 @@ a:focus-visible,
   align-items: center;
   gap: 6px;
   color: var(--ink);
-  font-family: inherit;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1663,7 +1562,7 @@ a:focus-visible,
 }
 .tour-title {
   color: var(--ink);
-  font-family: inherit;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 20px;
   letter-spacing: -0.04em;
 }
@@ -1905,18 +1804,18 @@ a:focus-visible,
   .workspace:has(.toolbar.dock-top) .floating-panel {
     top: 76px;
     right: 16px;
-    max-height: calc(100% - 226px);
+    max-height: calc(100% - 92px);
   }
   .workspace:has(.toolbar.dock-right) .floating-panel {
     top: 16px;
     right: 76px;
     max-width: calc(100% - 92px);
-    max-height: calc(100% - 180px);
+    max-height: calc(100% - 32px);
   }
   .workspace:has(.toolbar.dock-left) .floating-panel {
     top: 16px;
     right: 16px;
-    max-height: calc(100% - 180px);
+    max-height: calc(100% - 32px);
   }
   .workspace:has(.toolbar.dock-right) .zoom-controls {
     right: 76px;
@@ -1956,9 +1855,6 @@ a:focus-visible,
   }
   .sidebar-resize-handle {
     display: none;
-  }
-  .sidebar.sidebar-expanded .sidebar-resize-handle {
-    display: block;
   }
   .sidebar-mobile-toggle {
     display: grid;
@@ -2113,31 +2009,30 @@ a:focus-visible,
   .floating-panel {
     top: auto;
     right: 8px;
-    bottom: calc(132px + env(safe-area-inset-bottom));
-    left: auto;
-    width: min(var(--properties-panel-width, 300px), calc(100% - 16px));
-    height: auto;
-    max-height: min(400px, calc(100% - 140px));
+    bottom: 8px;
+    left: 8px;
+    width: min(300px, calc(100% - 16px));
+    height: min(400px, calc(100% - 16px));
+    max-height: min(400px, calc(100% - 16px));
     overflow-y: auto;
   }
   .panel-resize-handle {
-    display: block;
+    display: none;
   }
   .workspace:has(.toolbar.dock-top) .floating-panel {
     top: 64px;
-    bottom: calc(132px + env(safe-area-inset-bottom));
-    height: auto;
-    max-height: min(400px, calc(100% - 204px));
+    height: min(400px, calc(100% - 74px));
+    max-height: calc(100% - 74px);
   }
   .workspace:has(.toolbar.dock-right) .floating-panel {
     top: 10px;
-    bottom: calc(132px + env(safe-area-inset-bottom));
+    bottom: auto;
     right: 64px;
     left: auto;
-    width: min(var(--properties-panel-width, 240px), calc(100% - 74px));
+    width: min(240px, calc(100% - 74px));
     max-width: none;
-    height: auto;
-    max-height: min(400px, calc(100% - 142px));
+    height: min(400px, calc(100% - 20px));
+    max-height: calc(100% - 20px);
   }
   .empty-state {
     width: min(440px, calc(100% - 32px));
@@ -2189,30 +2084,29 @@ a:focus-visible,
   }
   .floating-panel {
     right: 8px;
-    bottom: calc(132px + env(safe-area-inset-bottom));
-    left: auto;
-    width: min(var(--properties-panel-width, 300px), calc(100% - 16px));
-    height: auto;
-    max-height: min(400px, calc(100% - 140px));
+    bottom: 8px;
+    left: 8px;
+    width: calc(100% - 16px);
+    height: min(400px, calc(100% - 16px));
+    max-height: min(400px, calc(100% - 16px));
   }
   .workspace:has(.toolbar.dock-top) .floating-panel {
     top: 62px;
-    bottom: calc(132px + env(safe-area-inset-bottom));
-    height: auto;
-    max-height: min(400px, calc(100% - 196px));
+    height: min(400px, calc(100% - 70px));
+    max-height: calc(100% - 70px);
   }
   .workspace:has(.toolbar.dock-right) .floating-panel {
     top: 8px;
-    bottom: calc(132px + env(safe-area-inset-bottom));
+    bottom: auto;
     right: 56px;
     left: auto;
-    width: min(var(--properties-panel-width, 240px), calc(100% - 64px));
-    height: auto;
-    max-height: min(400px, calc(100% - 140px));
+    width: calc(100% - 64px);
+    height: min(400px, calc(100% - 16px));
+    max-height: calc(100% - 16px);
   }
   .zoom-controls {
-    right: calc(8px + env(safe-area-inset-right));
-    bottom: calc(72px + env(safe-area-inset-bottom));
+    right: 8px;
+    bottom: 72px;
   }
   .zoom-value {
     min-width: 42px;
@@ -2222,57 +2116,8 @@ a:focus-visible,
     padding: 5px;
   }
   .tool-button {
-    width: 44px;
-    height: 44px;
-  }
-}
-@media (hover: none) and (pointer: coarse) {
-  .icon-button,
-  .tool-button {
-    width: 44px;
-    height: 44px;
-  }
-  .toolbar {
-    gap: 6px;
-    padding: 8px;
-  }
-  .zoom-controls {
-    padding: 6px;
-    gap: 6px;
-  }
-}
-@media (max-height: 420px) {
-  .workspace .floating-panel,
-  .workspace:has(.toolbar.dock-top) .floating-panel,
-  .workspace:has(.toolbar.dock-right) .floating-panel,
-  .workspace:has(.toolbar.dock-left) .floating-panel {
-    top: 60px;
-    bottom: 60px;
-    height: auto;
-    max-height: calc(100% - 120px);
-  }
-}
-@media (hover: none) and (pointer: coarse) {
-  .toolbar .tool-button,
-  .zoom-controls .icon-button,
-  .floating-panel .icon-button {
-    width: 44px;
-    height: 44px;
-  }
-  .toolbar {
-    gap: 6px;
-    padding: 8px;
-  }
-  .zoom-controls {
-    padding: 6px;
-    gap: 6px;
-  }
-  .sidebar.sidebar-expanded .sidebar-resize-handle,
-  .floating-panel .panel-resize-handle {
-    width: 24px;
-  }
-  .floating-panel .panel-resize-handle::after {
-    left: 9px;
+    width: 34px;
+    height: 34px;
   }
 }
 @media (hover: none) {
@@ -2381,7 +2226,7 @@ a:focus-visible,
 }
 
 .app {
-  font-size: calc(14px * var(--font-scale, 1));
+  font-size: calc(13px * var(--font-scale, 1));
 }
 
 .app button,
@@ -2468,8 +2313,7 @@ a:focus-visible,
   scroll-behavior: auto !important;
 }
 
-.accessibility-settings,
-.drawing-settings {
+.accessibility-settings {
   padding: 16px 0 4px;
   border-top: 1px solid var(--line);
 }
@@ -2497,10 +2341,7 @@ a:focus-visible,
 .settings-section-heading h2 {
   margin: 0;
   font:
-    600 15px 'Lexend',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
+    600 15px 'Space Grotesk',
     sans-serif;
 }
 
@@ -2611,10 +2452,7 @@ a:focus-visible,
 .tour-heading h2 {
   margin: 5px 0 0;
   font:
-    600 22px 'Lexend',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
+    600 22px 'Space Grotesk',
     sans-serif;
 }
 
@@ -2831,11 +2669,6 @@ kbd {
 .theme-catppuccin .canvas-shell,
 .theme-nord .canvas-shell {
   background-color: var(--surface);
-<<<<<<< HEAD
-}
-.theme-gruvbox .canvas-shell {
-  background-color: #ebddb3;
-=======
   background-image: radial-gradient(var(--line) 1px, transparent 1px);
   background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
 }
@@ -2843,7 +2676,6 @@ kbd {
   background-color: #ebddb3;
   background-image: radial-gradient(#c9b384 1px, transparent 1px);
   background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 }
 .theme-dracula .topbar,
 .theme-dracula .sidebar,
@@ -2855,13 +2687,6 @@ kbd {
 }
 .theme-dracula .canvas-shell {
   background-color: #21222c;
-<<<<<<< HEAD
-}
-
-@theme inline {
-  --font-sans: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-=======
   background-image: radial-gradient(#44475a 1px, transparent 1px);
   background-size: calc(24px * var(--canvas-zoom, 1)) calc(24px * var(--canvas-zoom, 1));
 }
@@ -2869,7 +2694,6 @@ kbd {
 @theme inline {
   --font-sans: 'DM Sans', sans-serif;
   --font-heading: var(--font-editorial);
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   --color-background: var(--surface);
   --color-foreground: var(--ink);
   --color-popover: var(--paper);
@@ -2892,228 +2716,6 @@ kbd {
   --radius-xl: 13px;
 }
 
-<<<<<<< HEAD
-/* A quieter, glass-like workspace chrome with short, springy feedback. */
-.app .topbar {
-  border-bottom-color: color-mix(in srgb, var(--line) 68%, transparent);
-  background: color-mix(in srgb, var(--header-custom, var(--paper)) 82%, transparent);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(24px) saturate(1.35);
-}
-.app .toolbar,
-.app .zoom-controls,
-.app .floating-panel {
-  border-color: color-mix(in srgb, var(--line) 70%, transparent);
-  background: color-mix(in srgb, var(--panel-custom, var(--paper)) 86%, transparent);
-  box-shadow:
-    0 18px 44px rgba(25, 36, 30, 0.1),
-    0 2px 8px rgba(25, 36, 30, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.36);
-  backdrop-filter: blur(24px) saturate(1.35);
-}
-.app .toolbar {
-  gap: 3px;
-  padding: 7px;
-  border-radius: 17px;
-  animation: chrome-enter 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.app .zoom-controls {
-  gap: 3px;
-  border-radius: 14px;
-  animation: chrome-enter 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.app .floating-panel {
-  border-radius: 17px;
-  animation: panel-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.app .tool-button,
-.app .icon-button {
-  border-radius: 11px;
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    box-shadow 180ms ease,
-    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.app .tool-button:hover:not(:disabled),
-.app .icon-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-.app .tool-button:active:not(:disabled),
-.app .icon-button:active:not(:disabled) {
-  transform: scale(0.94);
-}
-.app .tool-button.active {
-  box-shadow:
-    0 4px 10px color-mix(in srgb, var(--primary) 24%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-.app .canvas-object .object-card {
-  transition:
-    box-shadow 180ms ease,
-    outline-color 180ms ease;
-}
-.app .canvas-object:hover .object-card {
-  box-shadow: 0 9px 22px rgba(29, 29, 31, 0.13);
-}
-.app .canvas-object.selected .object-card {
-  animation: selection-enter 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.accessibility-high-contrast .app .toolbar,
-.accessibility-high-contrast .app .zoom-controls,
-.accessibility-high-contrast .app .floating-panel {
-  background: var(--paper);
-  box-shadow: 0 0 0 1px var(--line);
-  backdrop-filter: none;
-}
-.accessibility-high-contrast .app .topbar {
-  background: var(--paper);
-  box-shadow: 0 0 0 1px var(--line);
-  backdrop-filter: none;
-}
-
-/* Keep Workspace and Customize comfortable to reach on narrow touch screens. */
-@media (max-width: 820px) {
-  .sidebar {
-    gap: 16px;
-    padding: 12px 8px calc(16px + env(safe-area-inset-bottom));
-    overscroll-behavior: contain;
-  }
-  .sidebar.sidebar-expanded {
-    gap: 16px;
-    padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
-    overflow-x: hidden;
-    overscroll-behavior: contain;
-  }
-  .sidebar.sidebar-expanded .sidebar-tabs {
-    position: sticky;
-    top: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    margin: -2px -2px 0;
-    padding: 4px;
-    border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
-    border-radius: 13px;
-    background: color-mix(in srgb, var(--paper) 78%, transparent);
-    backdrop-filter: blur(18px) saturate(1.2);
-    z-index: 2;
-  }
-  .sidebar.sidebar-expanded .sidebar-tab {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    min-width: 0;
-    min-height: 44px;
-    border-radius: 10px;
-    font-size: 12px;
-  }
-  .sidebar.sidebar-expanded .sidebar-settings {
-    flex: 1 1 auto;
-    min-height: 0;
-    margin-right: -4px;
-    padding-right: 4px;
-    overflow: visible;
-  }
-}
-
-@media (max-width: 560px) {
-  .sidebar.sidebar-expanded {
-    position: fixed;
-    inset: calc(58px + env(safe-area-inset-top)) auto 0 0;
-    width: min(max(var(--sidebar-width, 280px), calc(100vw - 24px)), 420px);
-    max-width: none;
-    border-right: 1px solid var(--line);
-    border-top-right-radius: 18px;
-    box-shadow: 0 22px 54px rgba(18, 25, 21, 0.18);
-  }
-  .sidebar.sidebar-expanded .sidebar-tabs {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .sidebar.sidebar-expanded .sidebar-settings .panel-row:has(.accent-colors) {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: stretch;
-    gap: 8px;
-    padding: 10px 0;
-  }
-  .sidebar.sidebar-expanded .accent-colors {
-    width: 100%;
-    grid-template-columns: repeat(5, minmax(44px, 1fr));
-    gap: 8px;
-  }
-  .sidebar.sidebar-expanded .accent-colors .color-swatch {
-    width: 44px;
-    height: 44px;
-    justify-self: center;
-  }
-  .sidebar.sidebar-expanded .accent-picker {
-    width: 44px;
-    height: 44px;
-    justify-self: center;
-  }
-  .sidebar.sidebar-expanded .accent-picker input {
-    width: 44px;
-    height: 44px;
-  }
-  .sidebar.sidebar-expanded .accent-hex-input {
-    grid-column: 2 / 6;
-    width: 100%;
-    min-height: 40px;
-  }
-  .sidebar.sidebar-expanded .custom-color-row {
-    grid-template-columns: minmax(0, 1fr) 48px minmax(64px, auto);
-    gap: 8px;
-    min-height: 48px;
-  }
-  .sidebar.sidebar-expanded .custom-color-row input[type='color'] {
-    width: 44px;
-    height: 44px;
-    justify-self: center;
-  }
-  .sidebar.sidebar-expanded .custom-color-row code {
-    min-width: 0;
-    font-size: 10px;
-  }
-  .sidebar.sidebar-expanded .custom-color-row button {
-    min-height: 36px;
-  }
-  .sidebar.sidebar-expanded .sidebar-settings [data-slot='select-trigger'] {
-    min-height: 40px;
-  }
-  .floating-panel .property-color-control input[type='color'] {
-    width: 44px;
-    height: 44px;
-    flex-basis: 44px;
-  }
-  .floating-panel .property-color-hex {
-    height: 44px;
-    font-size: 12px;
-  }
-}
-@media (max-width: 720px) {
-  .sidebar.sidebar-expanded {
-    top: calc(62px + env(safe-area-inset-top));
-  }
-}
-
-@keyframes chrome-enter {
-  from {
-    opacity: 0;
-    scale: 0.96;
-  }
-  to {
-    opacity: 1;
-    scale: 1;
-  }
-}
-@keyframes selection-enter {
-  from {
-    outline-offset: 5px;
-  }
-  to {
-    outline-offset: 3px;
-=======
 .mobile-sidebar-trigger {
   display: none;
 }
@@ -3460,6 +3062,5 @@ kbd {
   .zoom-controls {
     right: 6px;
     bottom: 55px;
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   }
 }

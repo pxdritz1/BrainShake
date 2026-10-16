@@ -17,21 +17,9 @@ Create notes, connect thoughts, draw freely, and bring assets into one focused w
 
 [![Ko-fi support](https://cdn.modrinth.com/data/cached_images/c4c994ca06f3bc6bbcfdc5f6b98d4af42e397033.png)](https://ko-fi.com/pxdritz1)
 
-## See it in action
-
-BrainShake includes multiples visual themes. The board stays dense and practical while the canvas remains yours to shape.
-
-| Light | Dark |
-| --- | --- |
-| ![BrainShake light theme](screenshots/white.png) | ![BrainShake dark theme](screenshots/dark.png) |
-
-| Warm | Mint | OLED |
-| --- | --- | --- |
-| ![BrainShake warm theme](screenshots/warm.png) | ![BrainShake mint theme](screenshots/mint.png) | ![BrainShake OLED theme](screenshots/OLED.png) |
-
 ## Highlights
 
-- Infinite-feeling canvas with scroll zoom, middle-button drag pan, grid controls, multi-selection, movement, and resizing
+- Infinite-feeling canvas with scroll zoom, pan, grid controls, multi-selection, movement, and resizing
 - Sticky notes, text widgets, images, videos, sandboxed HTML previews, and connectors
 - Draggable widget titlebars with accent colors and one-click close controls
 - Light, warm, mint, dark, and OLED themes with persistent accent customization

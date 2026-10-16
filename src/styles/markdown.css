@@ -31,12 +31,8 @@
 .markdown-content h3,
 .markdown-content h4 {
   margin: 0 0 8px;
-<<<<<<< HEAD
-  font-family: inherit;
-=======
   font-family: var(--font-editorial, Georgia, serif);
   font-weight: 600;
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
   line-height: 1.2;
 }
 .markdown-content h1 {

@@ -3,31 +3,27 @@ import { GithubIcon } from '@/components/icons/GithubIcon'
 
 export function SidebarFooter() {
   return (
-<<<<<<< HEAD
-    <div className="sidebar-foot">
-=======
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
-      <div className="sidebar-links">
-        <a
-          className="sidebar-link"
-          href="https://github.com/pxdritz1/BrainShake"
-          target="_blank"
-          rel="noreferrer"
-          title="Open GitHub repository"
-        >
-          <GithubIcon size={16} />
-          <span>Source</span>
-        </a>
-        <a
-          className="sidebar-link"
-          href="https://ko-fi.com/pxdritz1"
-          target="_blank"
-          rel="noreferrer"
-          title="Support on Ko-fi"
-        >
-          <CoffeeIcon size={16} />
-          <span>Ko-fi</span>
-        </a>
-      </div>
+    <div className="sidebar-links">
+      <a
+        className="sidebar-link"
+        href="https://github.com/pxdritz1/BrainShake"
+        target="_blank"
+        rel="noreferrer"
+        title="Open GitHub repository"
+      >
+        <GithubIcon size={16} />
+        <span>Source</span>
+      </a>
+      <a
+        className="sidebar-link"
+        href="https://ko-fi.com/pxdritz1"
+        target="_blank"
+        rel="noreferrer"
+        title="Support on Ko-fi"
+      >
+        <CoffeeIcon size={16} />
+        <span>Ko-fi</span>
+      </a>
+    </div>
   )
 }

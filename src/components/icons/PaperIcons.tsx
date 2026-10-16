@@ -6,6 +6,7 @@ type GlyphName =
   | 'boxSelect'
   | 'camera'
   | 'check'
+  | 'circleDot'
   | 'chevronDown'
   | 'chevronLeft'
   | 'chevronRight'
@@ -14,6 +15,7 @@ type GlyphName =
   | 'copy'
   | 'diamond'
   | 'download'
+  | 'eraser'
   | 'fileArchive'
   | 'fileCode'
   | 'fileText'
@@ -87,6 +89,13 @@ const drawings: Record<GlyphName, ReactNode> = {
       <path d="m5.5 12.4 3.3 3" strokeDasharray="1 1.6" />
     </>
   ),
+  circleDot: (
+    <>
+      <circle cx="12" cy="12" r="8.1" />
+      <circle cx="12" cy="12" r="3.1" />
+      <path d="M12 2.7v1.6m0 15.4v1.6M2.7 12h1.6m15.4 0h1.6" strokeDasharray="1 1.7" />
+    </>
+  ),
   chevronDown: (
     <>
       <path d="m5.2 8.9 6.7 6.4 6.9-6.5" />
@@ -135,6 +144,12 @@ const drawings: Record<GlyphName, ReactNode> = {
       <path d="M4.1 15.7v3.1c0 .5.5.8 1 .8h13.8c.6 0 1-.3 1-.9v-3" />
       <path d="M12 4v11.2m0 0 4.4-4.3m-4.4 4.3-4.2-4.3" />
       <path d="M7 18h.8m8.2 0h.8" strokeDasharray="1 1" />
+    </>
+  ),
+  eraser: (
+    <>
+      <path d="m4.6 14.2 8.8-9.1c.6-.6 1.4-.6 2 0l4.1 4c.6.6.6 1.4 0 2L11 19.8H7.1l-2.5-2.4c-.9-.9-.9-2.2 0-3.2Z" />
+      <path d="m9 10 6.2 6.1m-3.7 3.7 4.8-5m-8.9 5h12.1" />
     </>
   ),
   fileArchive: (
@@ -405,6 +420,7 @@ export const BoxSelect = makeIcon('boxSelect')
 export const Camera = makeIcon('camera')
 export const Check = makeIcon('check')
 export const CheckIcon = Check
+export const CircleDot = makeIcon('circleDot')
 export const ChevronDownIcon = makeIcon('chevronDown')
 export const ChevronLeft = makeIcon('chevronLeft')
 export const ChevronRight = makeIcon('chevronRight')
@@ -414,6 +430,7 @@ export const Circle = makeIcon('circle')
 export const Copy = makeIcon('copy')
 export const Diamond = makeIcon('diamond')
 export const Download = makeIcon('download')
+export const Eraser = makeIcon('eraser')
 export const FileArchive = makeIcon('fileArchive')
 export const FileCode2 = makeIcon('fileCode')
 export const FileText = makeIcon('fileText')

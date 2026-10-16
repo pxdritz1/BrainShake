@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CircleDot } from 'lucide-react'
+import { CircleDot } from '@/components/icons/PaperIcons'
 
 export function EraserMenu({
   value,

@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
 import { Toast } from '@/components/Toast'
 import { useToast } from '@/hooks/useToast'
@@ -26,59 +26,16 @@ export default function App() {
   const preferences = usePreferences()
   const viewport = useViewport()
   const editor = useBoardEditor({ viewport, showToast })
-  const pointer = useCanvasPointer({
-    editor,
-    viewport,
-    autoSnap: preferences.autoSnapShapes,
-    onSnap: ({ kind }, linked) =>
-      showToast(
-        linked
-          ? 'Linked with an arrow. Undo to keep your drawing.'
-          : `Snapped to ${kind}. Undo to keep your drawing.`
-      ),
-    onGesture: ({ type, ids }) => {
-      const one = ids.length === 1
-      const items = one ? '1 item' : `${ids.length} items`
-      showToast(
-        type === 'erase'
-          ? `Erased ${items}. Undo to bring ${one ? 'it' : 'them'} back.`
-          : `Selected ${items}.`
-      )
-    }
-  })
+  const pointer = useCanvasPointer({ editor, viewport })
   const snapshots = useSnapshots({ editor, showToast })
   const transfer = useImportExport({ editor, snapshots, showToast })
-<<<<<<< HEAD
-  const { board, selected } = editor
-  const selectionKey = selected.join('|')
-  const [panelState, setPanelState] = useState<{ selectionKey: string; hidden: boolean } | null>(
-    null
-  )
-  const showPanel =
-    selected.length > 0 && !(panelState?.selectionKey === selectionKey && panelState.hidden)
-  const closePanel = useCallback(
-    () => setPanelState({ selectionKey, hidden: true }),
-    [selectionKey]
-  )
-  const togglePanel = () => setPanelState({ selectionKey, hidden: showPanel })
-=======
   const [showPanel, setShowPanel] = useState(() => !window.matchMedia('(max-width: 820px)').matches)
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
   const [tourOpen, setTourOpen] = useState(false)
   const [presentationOpen, setPresentationOpen] = useState(false)
   const [presentationItemId, setPresentationItemId] = useState<string | null>(null)
 
   useEffect(() => {
-<<<<<<< HEAD
-    const mobileQuery = window.matchMedia('(max-width: 720px)')
-    const closePanelOnMobile = (event: MediaQueryListEvent) => {
-      if (event.matches) closePanel()
-    }
-    mobileQuery.addEventListener('change', closePanelOnMobile)
-    return () => mobileQuery.removeEventListener('change', closePanelOnMobile)
-  }, [closePanel])
-=======
     const mobileQuery = window.matchMedia('(max-width: 820px)')
     const syncMobileLayout = (event: MediaQueryListEvent) => {
       if (event.matches) setShowPanel(false)
@@ -87,11 +44,12 @@ export default function App() {
     mobileQuery.addEventListener('change', syncMobileLayout)
     return () => mobileQuery.removeEventListener('change', syncMobileLayout)
   }, [])
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
 
   const fileRef = useRef<HTMLInputElement>(null)
   const boardFileRef = useRef<HTMLInputElement>(null)
   const openFilePicker = () => fileRef.current?.click()
+  const { board, selected } = editor
+
   const toggleSlides = () => {
     const selectedItems = board.objects.filter((item) => selected.includes(item.id))
     if (!selectedItems.length) return
@@ -135,7 +93,7 @@ export default function App() {
     redo: editor.redo,
     selectAll: editor.selectAll,
     copy: editor.copySelection,
-    paste: transfer.pasteClipboard,
+    paste: editor.pasteSelection,
     remove: editor.removeSelection,
     cancel: () => {
       editor.setSelected([])
@@ -153,7 +111,6 @@ export default function App() {
         style={
           {
             '--primary': preferences.accent,
-            '--stroke-color': preferences.accent,
             '--font-scale': fontScale,
             '--header-custom': preferences.headerColor || 'var(--paper)',
             '--sidebar-custom': preferences.sidebarColor || 'var(--paper)',
@@ -172,13 +129,9 @@ export default function App() {
           editor={editor}
           transfer={transfer}
           onImportBoard={() => boardFileRef.current?.click()}
-<<<<<<< HEAD
-          onToggleSettings={togglePanel}
-=======
           onToggleSettings={() => setShowPanel((value) => !value)}
           onToggleSidebar={() => setSidebarExpanded((value) => !value)}
           sidebarExpanded={sidebarExpanded}
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
           onOpenTour={() => setTourOpen(true)}
           onOpenPresentation={() => setPresentationOpen(true)}
         />
@@ -221,7 +174,7 @@ export default function App() {
             <PropertiesPanel
               item={board.objects.find((item) => item.id === selected[0])}
               onChange={editor.updateObject}
-              onClose={closePanel}
+              onClose={() => setShowPanel(false)}
             />
           )}
           {transfer.urlOpen && (

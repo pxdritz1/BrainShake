@@ -13,7 +13,7 @@ export function DraftStroke({ drawing, strokeWidth }: { drawing: Drawing; stroke
     >
       <path
         style={{ strokeWidth, opacity: snapped ? 0.25 : undefined }}
-        d={strokePath(drawing.points, true)}
+        d={strokePath(drawing.points)}
       />
       {snapped && <path style={{ strokeWidth }} d={strokePath(snapped.points)} />}
     </svg>

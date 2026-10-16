@@ -42,22 +42,7 @@ export const STICKY_COLORS = {
   white: '#fffdf7'
 }
 
-<<<<<<< HEAD
-export const ACCENTS = [
-  '#a8c9f0',
-  '#a9ddb2',
-  '#d4b0e8',
-  '#f5c58a',
-  '#f2aebc',
-  '#f2a9a2',
-  '#9adbd4',
-  '#b7b6ee',
-  '#a9dff0',
-  '#f3df8d'
-]
-=======
 export const ACCENTS = ['#a85032', '#536b78', '#68745c', '#9a7353', '#786568', '#343b39']
->>>>>>> 04c4b7e (feat(ui): atualiza visual artesanal e elementos do canvas)
 
 export const THEMES = [
   { id: 'light', label: 'Light' },
@@ -96,6 +81,5 @@ export const TOOL_SHORTCUTS = {
   t: 'text',
   n: 'sticky',
   p: 'pen',
-  e: 'eraser',
   l: 'connector'
 }

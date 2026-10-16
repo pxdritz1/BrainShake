@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ChevronDown, Plus } from 'lucide-react'
+import { ChevronDownIcon, Plus } from '@/components/icons/PaperIcons'
 import type { useSnapshots } from './useSnapshots'
 
 export function SnapshotList({ snapshots }: { snapshots: ReturnType<typeof useSnapshots> }) {
@@ -18,7 +18,7 @@ export function SnapshotList({ snapshots }: { snapshots: ReturnType<typeof useSn
           aria-expanded={expanded}
           onClick={() => setExpanded((current) => !current)}
         >
-          <ChevronDown size={13} className={expanded ? '' : 'collapsed'} />
+          <ChevronDownIcon size={13} className={expanded ? '' : 'collapsed'} />
           Snapshots
           {snapshots.items.length > 0 && (
             <span className="snapshot-count">{snapshots.items.length}</span>

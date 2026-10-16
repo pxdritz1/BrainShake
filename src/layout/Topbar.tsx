@@ -1,20 +1,10 @@
 import { Button } from '@/components/ui/button'
 import type { useBoardEditor } from '@/features/board/hooks/useBoardEditor'
 import type { useImportExport } from '@/features/import-export/hooks/useImportExport'
-<<<<<<< HEAD
-import { MoreHorizontal, PanelRight, Presentation, Upload } from 'lucide-react'
-=======
 import { Menu, Presentation, Settings2, Upload, X } from '@/components/icons/PaperIcons'
->>>>>>> c29df95 (feat(layout): adapta navegação responsiva e atualiza a marca)
 import { BalloonIcon } from '@/components/icons/BalloonIcon'
 import { BoardTitle } from '@/features/board/components/BoardTitle'
 import { ExportMenu } from '@/features/import-export/components/ExportMenu'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 
 export function Topbar({
   editor,
@@ -66,38 +56,33 @@ export function Topbar({
           onExportJson={transfer.exportAsJson}
           compact
         />
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="icon-button"
-              title="More workspace actions"
-              aria-label="More workspace actions"
-            >
-              <MoreHorizontal size={18} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            sideOffset={8}
-            className="workspace-actions-menu topbar-actions-menu"
-          >
-            <DropdownMenuItem onSelect={onImportBoard}>
-              <Upload size={15} /> Import board or workspace
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={onOpenPresentation}>
-              <Presentation size={15} /> Presentation mode
-            </DropdownMenuItem>
-            {editor.selected.length > 0 && (
-              <DropdownMenuItem onSelect={onToggleSettings}>
-                <PanelRight size={15} /> Toggle properties panel
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuItem onSelect={onOpenTour}>
-              <BalloonIcon /> Accessibility tour
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant="ghost"
+          className="icon-button"
+          title="Import workspace or board"
+          onClick={onImportBoard}
+        >
+          <Upload size={17} />
+        </Button>
+        <Button
+          variant="ghost"
+          className="icon-button"
+          title="Accessibility Tour"
+          onClick={onOpenTour}
+        >
+          <BalloonIcon />
+        </Button>
+        <Button
+          variant="ghost"
+          className="icon-button"
+          title="Presentation mode"
+          onClick={onOpenPresentation}
+        >
+          <Presentation size={17} />
+        </Button>
+        <Button variant="ghost" className="icon-button" title="Settings" onClick={onToggleSettings}>
+          <Settings2 size={17} />
+        </Button>
       </div>
     </header>
   )
